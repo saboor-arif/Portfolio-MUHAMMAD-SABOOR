@@ -52,9 +52,7 @@
     }
   };
 
-  let activeThemeKey = localStorage.getItem('portfolio-theme') || 'emerald';
-  if (!THEMES[activeThemeKey]) activeThemeKey = 'emerald';
-  window.__ACTIVE_CURSOR_RGB = THEMES[activeThemeKey].cursorRgb;
+ let activeThemeKey = 'emerald';
 
   let vantaInstance = null;
 
@@ -201,8 +199,7 @@
     activeThemeKey = themeKey;
     window.__ACTIVE_CURSOR_RGB = cfg.cursorRgb;
 
-    document.documentElement.setAttribute('data-theme', themeKey);
-    localStorage.setItem('portfolio-theme', themeKey);
+   document.documentElement.setAttribute('data-theme', themeKey);
 
     const metaTheme = $('meta[name="theme-color"]');
     if (metaTheme) metaTheme.setAttribute('content', cfg.metaBg);
