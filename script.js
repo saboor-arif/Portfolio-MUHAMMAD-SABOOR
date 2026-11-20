@@ -279,11 +279,13 @@
     let isEntered = false;
     let nameTypedOnce = false;
 
-    function enterPortfolio() {
+   function enterPortfolio() {
       if (isEntered) return;
       isEntered = true;
       overlay.classList.add('is-hidden');
       document.body.classList.remove('intro-locked');
+      window.scrollTo(0, 0);
+      window.dispatchEvent(new Event('scroll'));
       if (!nameTypedOnce) {
         nameTypedOnce = true;
         initNameTyping();
@@ -497,7 +499,11 @@
       on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
     });
 
-    const onScroll = () => {
+   const onScroll = () => {
+      if (document.body.classList.contains('intro-locked')) {
+        setActive(secs[0].id);
+        return;
+      }
       const y = scrollY + 120;
       let cur = secs[0].id;
       secs.forEach(s => { if (s.offsetTop <= y) cur = s.id; });
@@ -539,7 +545,7 @@
     return `<div class="card fallback"><h3>${esc(msg)}</h3><p>My repositories are available directly on GitHub.</p><a class="btn primary" href="${PROFILE_URL}?tab=repositories" target="_blank" rel="noopener">Open github.com/${USER}</a></div>`;
   }
 
-function applyProfile(p) {
+  function applyProfile(p) {
     // Local avatar.png use ho rahi hai
   }
 
@@ -967,9 +973,8 @@ function applyProfile(p) {
   const trailDots = [];
   const ripples = [];
 
-  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .intro-return-btn, .nav-dot';
-  const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .cert-card, [role="button"], [role="menuitem"]';
-
+  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn, .nav-dot';
+const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
   const setHover = on => {
     ring.classList.toggle('hover', on);
     dot.classList.toggle('hover', on);
@@ -1065,7 +1070,7 @@ function applyProfile(p) {
     ring.classList.add('show');
     spawnTrail(mx, my);
 
-    if (activeEl) {
+    if (activeEl && !activeEl.classList.contains('theme-option')) {
       const rect = activeEl.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
@@ -1086,6 +1091,9 @@ function applyProfile(p) {
   document.addEventListener('mousedown', e => {
     ring.classList.add('down');
     spawnRipple(e.clientX, e.clientY);
+    if (e.target.closest('.theme-option, .play-portfolio-btn, .intro-return-btn')) {
+      setTimeout(clearMagnetic, 0);
+    }
   });
 
   document.addEventListener('mouseup', () => ring.classList.remove('down'));
@@ -1163,6 +1171,15 @@ function applyProfile(p) {
     let targetW = 40;
     let targetH = 40;
     let targetRadius = '50%';
+
+   if (activeEl && (
+      !activeEl.isConnected ||
+      activeEl.offsetParent === null ||
+      activeEl.closest('.is-hidden') ||
+      getComputedStyle(activeEl).visibility === 'hidden'
+    )) {
+      clearMagnetic();
+    }
 
     if (activeEl) {
       const rect = activeEl.getBoundingClientRect();

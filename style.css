@@ -36,6 +36,21 @@
   --bg2-rgb: 15, 23, 42;
 }
 
+[data-theme="purple"] {
+  --bg: #f3f4f6;
+  --bg2: #e5e7eb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+  --border: #d1d5db;
+  --accent: #8b5cf6;
+  --accent-h: #a78bfa;
+  --accent-rgb: 167, 139, 250;
+  --accent-dark-rgb: 139, 92, 246;
+  --bg-rgb: 243, 244, 246;
+  --bg2-rgb: 229, 231, 235;
+}
+
 [data-theme="charcoal"] {
   --bg: #11100f;
   --bg2: #1a1816;
@@ -1433,3 +1448,53 @@ html.has-cursor textarea { cursor: text !important; }
 .hero-socials a[aria-label="LinkedIn"]:hover { background: #0a66c2; border-color: #0a66c2; color: #ffffff; box-shadow: 0 6px 18px rgba(10, 102, 194, .45); }
 .hero-socials a[aria-label="GitHub"]:hover { background: #f0f6fc; border-color: #f0f6fc; color: #0d1117; box-shadow: 0 6px 18px rgba(240, 246, 252, .3); }
 .hero-socials a[aria-label="Email"]:hover { background: #ea4335; border-color: #ea4335; color: #ffffff; box-shadow: 0 6px 18px rgba(234, 67, 53, .45); }
+
+/* Compact Hero Spacing so Social Icons, Buttons & About Section Stay Visible */
+/* Ultra-Clean Hero Fit for 100vh Viewport */
+.hero {
+  padding: 20px 0 28px;
+}
+
+.hero-grid {
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 28px;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 3.8vw, 2.85rem);
+}
+
+.hero-photo {
+  transform: translateY(0);
+  gap: 8px;
+}
+
+.avatar {
+  width: 200px;
+  height: 200px;
+}
+
+.hero-photo::before {
+  width: 215px;
+  height: 215px;
+}
+
+.role {
+  margin-top: 6px;
+  font-size: 1.35rem;
+}
+
+.bio {
+  margin-top: 8px;
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
+.actions {
+  margin-top: 14px;
+}
+
+.about-details {
+  margin-top: 24px;
+}
+
