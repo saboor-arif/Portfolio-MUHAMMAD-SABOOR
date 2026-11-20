@@ -87,7 +87,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; overflow-x: hidden; transition: background-color 0.35s ease, color 0.35s ease; }
-body.intro-locked { overflow: hidden; height: 100vh; }
+body.intro-locked {
+  overflow: hidden;
+  height: 100dvh;
+}
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 h1, h2, h3, p, ul { margin: 0; }
@@ -1451,6 +1454,7 @@ html.has-cursor textarea { cursor: text !important; }
 
 /* Compact Hero Spacing so Social Icons, Buttons & About Section Stay Visible */
 /* Ultra-Clean Hero Fit for 100vh Viewport */
+/* Compact Hero Spacing so Social Icons, Buttons & About Section Stay Visible */
 .hero {
   padding: 20px 0 28px;
 }
@@ -1460,8 +1464,16 @@ html.has-cursor textarea { cursor: text !important; }
   gap: 28px;
 }
 
+.hero-copy,
+.hero-photo {
+  min-width: 0;
+  max-width: 100%;
+}
+
 h1 {
   font-size: clamp(1.8rem, 3.8vw, 2.85rem);
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .hero-photo {
@@ -1496,5 +1508,51 @@ h1 {
 
 .about-details {
   margin-top: 24px;
+}
+
+/* Mobile Override: Must stay AFTER desktop .hero-grid above */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+
+  .hero-copy {
+    order: 2;
+    width: 100%;
+  }
+
+  .hero-photo {
+    order: 1;
+    transform: none;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(1.65rem, 7.5vw, 2.35rem);
+  }
+
+  .role {
+    font-size: 1.15rem;
+  }
+
+  .bio {
+    max-width: 100%;
+    margin-inline: auto;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+
+  .about-grid,
+  .contact-grid,
+  .services-grid,
+  .certs-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
