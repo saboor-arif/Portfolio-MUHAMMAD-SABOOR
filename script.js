@@ -2,14 +2,64 @@
   'use strict';
 
   /* =========================================================
-  1. CONFIGURATION & DOM HELPERS
+  1. CONFIGURATION, THEMES & DOM HELPERS
      ========================================================= */
   const USER = 'saboor-arif';
   const EMAIL = 'saboorarif35@gmail.com';
   const API = 'https://api.github.com/users/' + USER;
   const PROFILE_URL = 'https://github.com/' + USER;
 
+  const THEMES = {
+    emerald: {
+      name: 'Emerald Dark',
+      s1: '#0d1117',
+      s2: '#2ea043',
+      vantaColor: 0x217d35,
+      vantaBg: 0x0d1117,
+      metaBg: '#0d1117',
+      cursorRgb: '46, 160, 67',
+      targetHue: null
+    },
+    midnight: {
+      name: 'Midnight Blue',
+      s1: '#070b14',
+      s2: '#38bdf8',
+      vantaColor: 0x0ea5e9,
+      vantaBg: 0x070b14,
+      metaBg: '#070b14',
+      cursorRgb: '56, 189, 248',
+      targetHue: 202
+    },
+    charcoal: {
+      name: 'Charcoal Orange',
+      s1: '#11100f',
+      s2: '#fb923c',
+      vantaColor: 0xf97316,
+      vantaBg: 0x11100f,
+      metaBg: '#11100f',
+      cursorRgb: '251, 146, 60',
+      targetHue: 26
+    },
+    cherry: {
+      name: 'Cherry Red',
+      s1: '#13090c',
+      s2: '#fb7185',
+      vantaColor: 0xe11d48,
+      vantaBg: 0x13090c,
+      metaBg: '#13090c',
+      cursorRgb: '251, 113, 133',
+      targetHue: 348
+    }
+  };
+
+  let activeThemeKey = localStorage.getItem('portfolio-theme') || 'emerald';
+  if (!THEMES[activeThemeKey]) activeThemeKey = 'emerald';
+  window.__ACTIVE_CURSOR_RGB = THEMES[activeThemeKey].cursorRgb;
+
+  let vantaInstance = null;
+
   document.documentElement.classList.add('js');
+  document.documentElement.setAttribute('data-theme', activeThemeKey);
 
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -27,6 +77,237 @@
       return null;
     }
   };
+
+  /* =========================================================
+  1B. AVATAR SHIRT & BACKGROUND GREEN-TO-THEME RECOLOR
+     ========================================================= */
+  let baseAvatarImg = null;
+  const recoloredCache = {};
+
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h *= 60;
+    }
+    return [h, s, l];
+  }
+
+  function hslToRgb(h, s, l) {
+    h /= 360;
+    let r, g, b;
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  function setAvatarSrc(src) {
+    const introAv = $('#intro-avatar');
+    const heroAv = $('#hero-avatar');
+    if (introAv) introAv.src = src;
+    if (heroAv) heroAv.src = src;
+  }
+
+  function recolorAvatar(targetHue) {
+    const cacheKey = targetHue === null ? 'emerald' : String(targetHue);
+    if (recoloredCache[cacheKey]) {
+      setAvatarSrc(recoloredCache[cacheKey]);
+      return;
+    }
+
+    if (!baseAvatarImg) {
+      baseAvatarImg = new Image();
+      baseAvatarImg.crossOrigin = 'anonymous';
+      baseAvatarImg.src = 'avatar.png';
+      baseAvatarImg.onload = () => recolorAvatar(targetHue);
+      return;
+    }
+
+    if (!baseAvatarImg.complete || !baseAvatarImg.naturalWidth) return;
+
+    if (targetHue === null) {
+      recoloredCache.emerald = baseAvatarImg.src;
+      setAvatarSrc(baseAvatarImg.src);
+      return;
+    }
+
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = baseAvatarImg.naturalWidth;
+      canvas.height = baseAvatarImg.naturalHeight;
+      ctx.drawImage(baseAvatarImg, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        const [h, s, l] = rgbToHsl(r, g, b);
+
+        // Sirf Green range (shirt + background green icons) change hogi, face bilkul same rahega
+        if (h >= 72 && h <= 168 && s > 0.14 && l > 0.06 && l < 0.88) {
+          const distFromGreen = Math.abs(h - 125);
+          const blend = Math.max(0, Math.min(1, (48 - distFromGreen) / 14));
+          const boostedSat = Math.min(0.92, s * 1.18);
+          const adjustedLight = (targetHue === 26 || targetHue === 348)
+            ? Math.min(0.75, l * 1.08)
+            : l;
+
+          const [nr, ng, nb] = hslToRgb(targetHue, boostedSat, adjustedLight);
+          data[i]     = Math.round(r * (1 - blend) + nr * blend);
+          data[i + 1] = Math.round(g * (1 - blend) + ng * blend);
+          data[i + 2] = Math.round(b * (1 - blend) + nb * blend);
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      const dataUrl = canvas.toDataURL('image/png');
+      recoloredCache[cacheKey] = dataUrl;
+      setAvatarSrc(dataUrl);
+    } catch (e) {
+      console.warn('Avatar recolor skipped:', e.message);
+    }
+  }
+
+  /* =========================================================
+  1C. GLOBAL THEME SWITCHER & VANTA LIVE RE-COLORING
+     ========================================================= */
+  function applyTheme(themeKey) {
+    const cfg = THEMES[themeKey] || THEMES.emerald;
+    activeThemeKey = themeKey;
+    window.__ACTIVE_CURSOR_RGB = cfg.cursorRgb;
+
+    document.documentElement.setAttribute('data-theme', themeKey);
+    localStorage.setItem('portfolio-theme', themeKey);
+
+    const metaTheme = $('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', cfg.metaBg);
+
+    const activeNameEl = $('#active-theme-name');
+    const activeSwatchEl = $('#active-theme-swatch');
+    if (activeNameEl) activeNameEl.textContent = cfg.name;
+    if (activeSwatchEl) {
+      activeSwatchEl.style.setProperty('--s1', cfg.s1);
+      activeSwatchEl.style.setProperty('--s2', cfg.s2);
+    }
+
+    $$('[data-theme]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeKey);
+    });
+
+    if (vantaInstance && typeof vantaInstance.setOptions === 'function') {
+      vantaInstance.setOptions({
+        color: cfg.vantaColor,
+        backgroundColor: cfg.vantaBg
+      });
+    }
+
+    recolorAvatar(cfg.targetHue);
+  }
+
+  function initThemeSwitcher() {
+    applyTheme(activeThemeKey);
+
+    const dropdown = $('#theme-dropdown');
+    const dropdownBtn = $('#theme-dropdown-btn');
+
+    const setDropdownOpen = open => {
+      if (!dropdown || !dropdownBtn) return;
+      dropdown.classList.toggle('open', open);
+      dropdownBtn.setAttribute('aria-expanded', String(open));
+    };
+
+    dropdownBtn?.addEventListener('click', e => {
+      e.stopPropagation();
+      setDropdownOpen(!dropdown.classList.contains('open'));
+    });
+
+    $$('[data-theme]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        applyTheme(btn.dataset.theme);
+        setDropdownOpen(false);
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (dropdown && !dropdown.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && dropdown?.classList.contains('open')) {
+        setDropdownOpen(false);
+      }
+    });
+  }
+
+  /* =========================================================
+  1C. INTRO SPLASH SCREEN ("PLAY PORTFOLIO" + RETURN TO INTRO)
+     ========================================================= */
+  function initIntroOverlay() {
+    const overlay = $('#intro-overlay');
+    const playBtn = $('#play-portfolio-btn');
+    const backBtn = $('#back-to-intro-btn');
+    if (!overlay) return;
+
+    let isEntered = false;
+    let nameTypedOnce = false;
+
+    function enterPortfolio() {
+      if (isEntered) return;
+      isEntered = true;
+      overlay.classList.add('is-hidden');
+      document.body.classList.remove('intro-locked');
+      if (!nameTypedOnce) {
+        nameTypedOnce = true;
+        initNameTyping();
+      }
+    }
+
+    function returnToIntro() {
+      isEntered = false;
+      overlay.classList.remove('is-hidden');
+      document.body.classList.add('intro-locked');
+    }
+
+    playBtn?.addEventListener('click', enterPortfolio);
+    backBtn?.addEventListener('click', returnToIntro);
+
+    document.addEventListener('keydown', e => {
+      const dropdown = $('#theme-dropdown');
+      if (!isEntered && e.key === 'Enter') {
+        if (dropdown?.classList.contains('open')) return;
+        e.preventDefault();
+        enterPortfolio();
+      }
+    });
+  }
 
   /* =========================================================
   2. HERO NAME TYPE-ONCE EFFECT (BLINKING CURSOR STAYS)
@@ -89,7 +370,7 @@
   }
 
   /* =========================================================
-  4. SKILLS DATA & RENDERER (MERGED CS FUNDAMENTALS & TOOLS)
+  4. SKILLS DATA & RENDERER
      ========================================================= */
   const DEV = 'https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/';
 
@@ -258,11 +539,8 @@
     return `<div class="card fallback"><h3>${esc(msg)}</h3><p>My repositories are available directly on GitHub.</p><a class="btn primary" href="${PROFILE_URL}?tab=repositories" target="_blank" rel="noopener">Open github.com/${USER}</a></div>`;
   }
 
-  function applyProfile(p) {
-    if (p.avatar_url) {
-      const avatar = $('#hero-avatar');
-      if (avatar) avatar.src = p.avatar_url + (p.avatar_url.includes('?') ? '&' : '?') + 's=400';
-    }
+function applyProfile(p) {
+    // Local avatar.png use ho rahi hai
   }
 
   function renderRepos(repos) {
@@ -312,8 +590,10 @@
   const FALLBACK_AVATAR = 'data:image/svg+xml,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#21262d"/><text x="100" y="118" font-family="sans-serif" font-size="64" font-weight="700" text-anchor="middle" fill="#2ea043">MSA</text></svg>'
   );
-  $('#hero-avatar')?.addEventListener('error', function () {
-    if (this.src !== FALLBACK_AVATAR) this.src = FALLBACK_AVATAR;
+  ['#hero-avatar', '#intro-avatar'].forEach(sel => {
+    $(sel)?.addEventListener('error', function () {
+      if (this.src !== FALLBACK_AVATAR) this.src = FALLBACK_AVATAR;
+    });
   });
 
   /* =========================================================
@@ -362,21 +642,21 @@
       tags: ['English', 'Communication', 'UMT', 'SD-100']
     },
     {
-  title: 'QuizOff 2026 — India’s Biggest AI Quiz',
-  issuer: 'CampusCrew • Unstop',
-  status: 'Participation Recognized',
-  image: 'AI Quiz.png',
-  description: 'Participated in QuizOff 2026, India’s Biggest AI Quiz, organized by CampusCrew and hosted on Unstop, bringing together students from 48,500+ institutions.',
-  tags: ['Artificial Intelligence', 'Quiz Competition', 'CampusCrew', 'Unstop', '2026']
-},
-{
-  title: 'Frontend Development Internship — DeMeta',
-  issuer: 'DeMeta Private Limited',
-  status: 'Internship Certificate',
-  image: 'DeMeta_M.Saboor.png',
-  description: 'Completed a three-month Frontend Development internship at DeMeta from July 2025 to September 2025, with a focus on frontend development and practical learning.',
-  tags: ['Frontend Development', 'Internship', 'Web Development', 'DeMeta', '3 Months']
-}
+      title: 'QuizOff 2026 — India’s Biggest AI Quiz',
+      issuer: 'CampusCrew • Unstop',
+      status: 'Participation Recognized',
+      image: 'AI Quiz.png',
+      description: 'Participated in QuizOff 2026, India’s Biggest AI Quiz, organized by CampusCrew and hosted on Unstop, bringing together students from 48,500+ institutions.',
+      tags: ['Artificial Intelligence', 'Quiz Competition', 'CampusCrew', 'Unstop', '2026']
+    },
+    {
+      title: 'Frontend Development Internship — DeMeta',
+      issuer: 'DeMeta Private Limited',
+      status: 'Internship Certificate',
+      image: 'DeMeta_M.Saboor.png',
+      description: 'Completed a three-month Frontend Development internship at DeMeta from July 2025 to September 2025, with a focus on frontend development and practical learning.',
+      tags: ['Frontend Development', 'Internship', 'Web Development', 'DeMeta', '3 Months']
+    }
   ];
 
   function initCertificates() {
@@ -438,18 +718,17 @@
             <span>Inspect Certificate</span>
           </button>
           <a class="cert-direct-link cert-download-btn" href="${esc(cert.pdf || cert.image)}" download="${esc((cert.pdf || cert.image).split('/').pop())}" onclick="event.stopPropagation()">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-    <path d="m7 10 5 5 5-5"/>
-    <path d="M12 15V3"/>
-  </svg>
-  <span>Download</span>
-</a>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <path d="m7 10 5 5 5-5"/>
+              <path d="M12 15V3"/>
+            </svg>
+            <span>Download</span>
+          </a>
         </div>
       </article>
     `).join('');
 
-    // Show a clear placeholder if a certificate image path is missing or incorrect.
     $$('#certificates-grid .cert-preview img').forEach(img => {
       img.addEventListener('error', () => {
         const preview = img.closest('.cert-preview');
@@ -587,24 +866,18 @@
   }
 
   /* =========================================================
-  9. VANTA NET BACKGROUND (HERO SECTION)
+  9. VANTA NET BACKGROUND (DYNAMIC THEME COLOR)
      ========================================================= */
   function initVanta() {
     const target = $('#vanta-bg');
     if (!target || !window.VANTA || !window.VANTA.NET) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Site ka actual background colour (body) read karke Vanta ke liye hex banata hai
-    const toHex = css => {
-      const m = css.match(/\d+/g);
-      if (!m || (m.length > 3 && +m[3] === 0)) return 0x0d1117; // fallback: GitHub dark
-      return (+m[0] << 16) | (+m[1] << 8) | +m[2];
-    };
-    const bg = toHex(getComputedStyle(document.body).backgroundColor);
+    const cfg = THEMES[activeThemeKey] || THEMES.emerald;
     const mobile = window.innerWidth < 820;
 
     try {
-      window.VANTA.NET({
+      vantaInstance = window.VANTA.NET({
         el: target,
         mouseControls: true,
         touchControls: true,
@@ -613,8 +886,8 @@
         minWidth: 200.0,
         scale: 1.0,
         scaleMobile: 1.0,
-        color: 0x217d35,
-        backgroundColor: bg,
+        color: cfg.vantaColor,
+        backgroundColor: cfg.vantaBg,
         points: mobile ? 8.0 : 11.0,
         maxDistance: mobile ? 18.0 : 22.0,
         spacing: mobile ? 18.0 : 16.0
@@ -631,7 +904,8 @@
   const yearEl = $('#year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  initNameTyping();
+  initThemeSwitcher();
+  initIntroOverlay();
   initTyping();
   renderSkills();
   initNav();
@@ -670,7 +944,6 @@
   let viewW = 0;
   let viewH = 0;
 
-  /* Canvas ko DPR ke mutabiq resize karta hai taake trail aur ripple sharp dikhein */
   function resizeFxCanvas() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     viewW = window.innerWidth;
@@ -685,24 +958,23 @@
   resizeFxCanvas();
   window.addEventListener('resize', resizeFxCanvas, { passive: true });
 
-  let mx = -200, my = -200; // Actual cursor coordinates
-  let rx = -200, ry = -200; // Smoothed magnetic ring coordinates
-  let rw = 40, rh = 40;     // Smoothed ring width & height
-  let activeEl = null;      // Currently magnetized button/link
+  let mx = -200, my = -200;
+  let rx = -200, ry = -200;
+  let rw = 40, rh = 40;
+  let activeEl = null;
   let lastTrailX = null, lastTrailY = null;
 
   const trailDots = [];
   const ripples = [];
 
-  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close';
-  const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .cert-card, [role="button"]';
-  
+  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .intro-return-btn, .nav-dot';
+  const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .cert-card, [role="button"], [role="menuitem"]';
+
   const setHover = on => {
     ring.classList.toggle('hover', on);
     dot.classList.toggle('hover', on);
   };
 
-  /* Cursor ke peeche green trail dot spawn karta hai */
   function spawnTrail(x, y) {
     if (lastTrailX !== null && lastTrailY !== null) {
       const dist = Math.hypot(x - lastTrailX, y - lastTrailY);
@@ -724,7 +996,6 @@
     }
   }
 
-  /* Click karne par expanding green ripple banata hai */
   function spawnRipple(x, y) {
     ripples.push({
       x,
@@ -735,7 +1006,6 @@
     });
   }
 
-  /* Magnetic pull aur hover state ko saaf karta hai */
   function clearMagnetic() {
     if (activeEl) {
       activeEl.style.transform = '';
@@ -748,7 +1018,6 @@
     setHover(false);
   }
 
-  /* Scroll rukne ke baad check karta hai ke cursor ke neeche kaunsa element hai */
   function syncCursorTarget() {
     if (mx < 0 || my < 0 || mx > viewW || my > viewH) {
       clearMagnetic();
@@ -773,7 +1042,6 @@
     }
   }
 
-  /* Scroll ke dauran stuck hover/magnetic state foran clear aur re-sync karta hai */
   let scrollTimer;
   window.addEventListener('scroll', () => {
     document.documentElement.classList.add('is-scrolling');
@@ -847,9 +1115,9 @@
     }
   });
 
-  /* Har frame mein trail dots aur click ripples draw karta hai */
   function renderTrailAndRipples() {
     fxCtx.clearRect(0, 0, viewW, viewH);
+    const rgb = window.__ACTIVE_CURSOR_RGB || '46, 160, 67';
 
     for (let i = trailDots.length - 1; i >= 0; i--) {
       const p = trailDots[i];
@@ -863,8 +1131,8 @@
 
       fxCtx.beginPath();
       fxCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      fxCtx.fillStyle = `rgba(46, 160, 67, ${p.alpha.toFixed(3)})`;
-      fxCtx.shadowColor = 'rgba(46, 160, 67, 0.55)';
+      fxCtx.fillStyle = `rgba(${rgb}, ${p.alpha.toFixed(3)})`;
+      fxCtx.shadowColor = `rgba(${rgb}, 0.55)`;
       fxCtx.shadowBlur = 8;
       fxCtx.fill();
     }
@@ -883,13 +1151,12 @@
 
       fxCtx.beginPath();
       fxCtx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-      fxCtx.strokeStyle = `rgba(46, 160, 67, ${rp.alpha.toFixed(3)})`;
+      fxCtx.strokeStyle = `rgba(${rgb}, ${rp.alpha.toFixed(3)})`;
       fxCtx.lineWidth = 2;
       fxCtx.stroke();
     }
   }
 
-  /* Magnetic ring ko smoothly target position aur size par lerp karta hai */
   (function animate() {
     let targetX = mx;
     let targetY = my;
@@ -922,4 +1189,64 @@
     renderTrailAndRipples();
     requestAnimationFrame(animate);
   })();
+})();
+
+/* =========================================================
+12. 3D INTERACTIVE CARD TILT EFFECT
+   ========================================================= */
+(() => {
+  'use strict';
+
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const MAX_TILT = 8;
+  let currentCard = null;
+
+  function resetCard(card) {
+    if (!card) return;
+    card.classList.remove('is-tilting');
+    card.style.transform = '';
+  }
+
+  document.addEventListener('mousemove', e => {
+    const card = e.target.closest('.card:not(#contact-form)');
+
+    if (currentCard && currentCard !== card) {
+      resetCard(currentCard);
+    }
+
+    currentCard = card;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const normX = (x - centerX) / centerX;
+    const normY = (y - centerY) / centerY;
+
+    const rotateX = (-normY * MAX_TILT).toFixed(2);
+    const rotateY = (normX * MAX_TILT).toFixed(2);
+
+    card.classList.add('is-tilting');
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale3d(1.015, 1.015, 1.015)`;
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    resetCard(currentCard);
+    currentCard = null;
+  });
+
+  window.addEventListener('scroll', () => {
+    if (currentCard) {
+      resetCard(currentCard);
+      currentCard = null;
+    }
+  }, { passive: true });
 })();

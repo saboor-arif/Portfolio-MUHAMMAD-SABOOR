@@ -14,22 +14,87 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23238636'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='700' text-anchor='middle' fill='%23fff'%3E%26lt;/%26gt;%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="intro-locked">
 <div id="vanta-bg" aria-hidden="true"></div>
+
+<!-- ==================== INTRO / LANDING SPLASH SCREEN ==================== -->
+<section id="intro-overlay" class="intro-overlay" aria-label="Welcome Screen">
+  <div class="intro-glass-card">
+
+    <h1 class="intro-title">MUHAMMAD SABOOR</h1>
+
+    <div class="intro-avatar-wrap">
+<img id="intro-avatar" class="intro-avatar" src="avatar.png" alt="Muhammad Saboor">
+    </div>
+
+    <!-- Compact Pop-Up Color Theme Selector (Fits 100% on Screen without Scroll) -->
+    <div class="theme-dropdown" id="theme-dropdown">
+   <button type="button" id="theme-dropdown-btn" class="theme-dropdown-btn" aria-expanded="false" aria-haspopup="true">
+  <span class="dropdown-left">
+    <span class="swatch" id="active-theme-swatch" style="--s1:#0d1117; --s2:#2ea043;"></span>
+    <span>COLOR THEME</span>
+  </span>
+  <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
+
+      <div class="theme-dropdown-menu" id="theme-dropdown-menu" role="menu">
+        <button type="button" class="theme-option active" data-theme="emerald" role="menuitem">
+          <span class="swatch" style="--s1:#0d1117; --s2:#2ea043;"></span>
+          <span class="option-text">Emerald Dark</span>
+          <span class="option-check">✓</span>
+        </button>
+        <button type="button" class="theme-option" data-theme="midnight" role="menuitem">
+          <span class="swatch" style="--s1:#070b14; --s2:#38bdf8;"></span>
+          <span class="option-text">Midnight Blue</span>
+          <span class="option-check">✓</span>
+        </button>
+        <button type="button" class="theme-option" data-theme="charcoal" role="menuitem">
+          <span class="swatch" style="--s1:#11100f; --s2:#fb923c;"></span>
+          <span class="option-text">Charcoal Orange</span>
+          <span class="option-check">✓</span>
+        </button>
+        <button type="button" class="theme-option" data-theme="cherry" role="menuitem">
+          <span class="swatch" style="--s1:#13090c; --s2:#fb7185;"></span>
+          <span class="option-text">Cherry Red</span>
+          <span class="option-check">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <button type="button" id="play-portfolio-btn" class="play-portfolio-btn">
+      <span class="play-icon-circle" aria-hidden="true">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+      </span>
+      <span>PLAY PORTFOLIO</span>
+    </button>
+
+    <p class="intro-hint">Press <kbd>Enter</kbd> or click to Play portfolio</p>
+  </div>
+</section>
+
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="site-header" id="top">
   <nav class="nav" aria-label="Primary">
-    <a class="brand" href="#about" aria-label="Muhammad Saboor, about"><span class="brand-mark">&lt;/&gt;</span><span class="brand-name">Muhammad Saboor </span></a>
-    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
-    <ul class="menu" id="menu">
-      <li><a href="#about" class="active" aria-current="true">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#certificates">Certificates</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <a class="brand" href="#about" aria-label="Muhammad Saboor, about"><span class="brand-mark">&lt;/&gt;</span><span class="brand-name">Muhammad Saboor</span></a>
+
+    <div class="nav-right">
+      <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+      <ul class="menu" id="menu">
+        <li><a href="#about" class="active" aria-current="true">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#certificates">Certificates</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <!-- Intro Return Button Moved to Right Side -->
+      <button type="button" id="back-to-intro-btn" class="intro-return-btn" title="Back to Intro Screen" aria-label="Return to Intro Screen">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="18 4 6 12 18 20 18 4"/></svg>
+        <span>Intro</span>
+      </button>
+    </div>
   </nav>
 </header>
 
@@ -52,7 +117,7 @@
 
         <div class="hero-photo">
           <div class="avatar-ring">
-            <img id="hero-avatar" class="avatar" width="260" height="260" alt="GitHub profile picture of Muhammad Saboor" src="https://github.com/saboor-arif.png?size=400">
+<img id="hero-avatar" class="avatar" width="260" height="260" alt="Profile picture of Muhammad Saboor" src="avatar.png">
           </div>
           <p class="handle">MUHAMMAD SABOOR</p>
           <div class="status-badge">
@@ -197,7 +262,6 @@
       <p class="lead"><i>Good code is better when built together.</i><br> Let’s connect and turn your concepts into reality and code your next big project. <br>Looking to collaborate? Drop a message anytime!</p>
 
       <div class="contact-grid">
-        <!-- Left Column: Info Rows + Direct Profile Tiles -->
         <div class="card">
           <div class="info-stack">
             <div class="info-row">
@@ -267,7 +331,6 @@
           </div>
         </div>
 
-        <!-- Right Column: Contact Form -->
         <form class="card form" id="contact-form" novalidate>
           <h3>Send a message</h3>
           <label for="f-name">Your name</label>
@@ -330,7 +393,6 @@
 
     <a href="#about" class="to-top">Return to Top 🚀</a>
   </div>
-</footer>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
