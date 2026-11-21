@@ -811,8 +811,7 @@
       if (e.key === 'ArrowRight') renderModal(currentIdx + 1);
     });
   }
-
-  /* =========================================================
+/* =========================================================
   8. CONTACT SECTION (DIRECT EMAIL SUBMISSION + COPY EMAIL)
      ========================================================= */
   function initContact() {
@@ -822,6 +821,22 @@
       copyStatus.textContent = msg;
       setTimeout(() => { copyStatus.textContent = ''; }, 2500);
     };
+
+    // Mobile par native Mail App aur Laptop/Desktop par seedha Gmail Web kholega
+    $$('a[href^="mailto:"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (!isMobile) {
+          e.preventDefault();
+          const emailAddr = link.getAttribute('href').replace('mailto:', '').split('?')[0];
+          window.open(
+            `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddr)}`,
+            '_blank',
+            'noopener,noreferrer'
+          );
+        }
+      });
+    });
 
     $('#copy-email')?.addEventListener('click', async () => {
       try {
@@ -837,7 +852,7 @@
     if (!form) return;
 
     const submitBtn = form.querySelector('button[type="submit"]');
-    const WEB3FORMS_KEY = 'fb0c3fcc-f335-40e1-8961-0df381aa200c'; // <-- Yahan apni Web3Forms key paste karein
+    const WEB3FORMS_KEY = 'fb0c3fcc-f335-40e1-8961-0df381aa200c';
 
     const rules = {
       name: v => v.trim().length >= 2 ? '' : 'Enter your name (at least 2 characters).',
@@ -1309,3 +1324,217 @@ const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [ro
     }
   }, { passive: true });
 })();
+
+/* ==================== SABOOR AI ASSISTANT LOGIC ==================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const WORKER_URL = "https://saboor-ai-assistant.saboorarif35.workers.dev";
+
+  const toggleBtn = document.getElementById("ai-chat-toggle");
+  const closeBtn = document.getElementById("ai-close-btn");
+  const clearBtn = document.getElementById("ai-clear-btn");
+  const chatWindow = document.getElementById("ai-chat-window");
+  const backdrop = document.getElementById("ai-chat-backdrop");
+  const chatForm = document.getElementById("ai-chat-form");
+  const chatInput = document.getElementById("ai-chat-input");
+  const messagesBox = document.getElementById("ai-chat-messages");
+  const scrollBottomBtn = document.getElementById("ai-scroll-bottom");
+  const chips = document.querySelectorAll(".ai-chip");
+
+  if (!toggleBtn || !chatWindow) return;
+
+  let conversationHistory = [];
+  let isSending = false;
+
+  function openChat() {
+    chatWindow.classList.add("open");
+    if (backdrop) backdrop.classList.add("open");
+    chatWindow.setAttribute("aria-hidden", "false");
+    setTimeout(() => chatInput && chatInput.focus(), 100);
+  }
+
+  function closeChat() {
+    chatWindow.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("open");
+    chatWindow.setAttribute("aria-hidden", "true");
+  }
+
+  toggleBtn.addEventListener("click", openChat);
+  if (closeBtn) closeBtn.addEventListener("click", closeChat);
+  if (backdrop) backdrop.addEventListener("click", closeChat);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && chatWindow.classList.contains("open")) {
+      closeChat();
+    }
+  });
+
+  messagesBox.addEventListener("scroll", () => {
+    const isNearBottom =
+      messagesBox.scrollHeight - messagesBox.scrollTop - messagesBox.clientHeight < 60;
+    if (scrollBottomBtn) {
+      scrollBottomBtn.classList.toggle("visible", !isNearBottom);
+    }
+  });
+
+  if (scrollBottomBtn) {
+    scrollBottomBtn.addEventListener("click", () => {
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    });
+  }
+
+  function formatText(text) {
+    const links = {
+      github:
+        document.querySelector('a[href*="github.com"]')?.href ||
+        "https://github.com/saboor-arif",
+      linkedin:
+        document.querySelector('a[href*="linkedin.com"]')?.href ||
+        "https://www.linkedin.com/in/muhammad-saboor-1a173938b",
+    };
+
+    const tokens = [];
+    const saveToken = (htmlLink) => {
+      const key = `@@LINK_${tokens.length}@@`;
+      tokens.push(htmlLink);
+      return key;
+    };
+
+    // 1. Safe HTML escape
+    let safe = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    // 2. Markdown links [Label](URL)
+    safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) =>
+      saveToken(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`)
+    );
+
+    // 3. Direct URLs (jaise GitHub link)
+    safe = safe.replace(/(https?:\/\/[^\s<)]+)/g, (url) => {
+      const cleanUrl = url.replace(/[.,!?]+$/, "");
+      const trailing = url.slice(cleanUrl.length);
+      return (
+        saveToken(
+          `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>`
+        ) + trailing
+      );
+    });
+
+    // 4. Sirf Contact Section, GitHub, aur LinkedIn ko clickable link banayein
+    safe = safe.replace(/\bContact Section\b/gi, (match) =>
+      saveToken(
+        `<a href="#contact" onclick="document.getElementById('ai-close-btn').click()">${match}</a>`
+      )
+    );
+
+    safe = safe.replace(/\bGitHub\b/g, () =>
+      saveToken(`<a href="${links.github}" target="_blank" rel="noopener noreferrer">GitHub</a>`)
+    );
+
+    safe = safe.replace(/\bLinkedIn\b/g, () =>
+      saveToken(`<a href="${links.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`)
+    );
+
+    // 5. Bold (**text**) aur line breaks
+    safe = safe
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n/g, "<br>");
+
+    // 6. Tokens wapas lagayein
+    tokens.forEach((linkHtml, i) => {
+      safe = safe.replace(`@@LINK_${i}@@`, linkHtml);
+    });
+
+    return safe;
+  }
+
+  function appendMessage(role, text, isTyping = false) {
+    if (role === "user") {
+      const div = document.createElement("div");
+      div.className = "ai-msg user";
+      div.textContent = text;
+      messagesBox.appendChild(div);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+      return div;
+    } else {
+      const group = document.createElement("div");
+      group.className = "ai-msg-group bot";
+
+      const label = document.createElement("span");
+      label.className = "ai-sender-label";
+      label.textContent = "AI ASSISTANT";
+
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "ai-msg bot";
+      if (isTyping) {
+        msgDiv.textContent = text;
+      } else {
+        msgDiv.innerHTML = formatText(text);
+      }
+
+      group.appendChild(label);
+      group.appendChild(msgDiv);
+      messagesBox.appendChild(group);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+      return msgDiv;
+    }
+  }
+
+  async function sendMessage(text) {
+    if (isSending) return;
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    isSending = true;
+    appendMessage("user", trimmed);
+    conversationHistory.push({ role: "user", parts: [{ text: trimmed }] });
+
+    const typingMsg = appendMessage("bot", "Thinking...", true);
+
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ history: conversationHistory }),
+      });
+
+      const data = await res.json();
+      const reply = data.reply || "Sorry, I couldn't process that right now.";
+
+      typingMsg.innerHTML = formatText(reply);
+      conversationHistory.push({ role: "model", parts: [{ text: reply }] });
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    } catch (err) {
+      typingMsg.textContent = "Network error. Please check your connection.";
+    } finally {
+      isSending = false;
+    }
+  }
+
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const val = chatInput.value;
+    chatInput.value = "";
+    sendMessage(val);
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      sendMessage(chip.textContent);
+    });
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      conversationHistory = [];
+      messagesBox.innerHTML = `
+        <div class="ai-msg-group bot">
+          <span class="ai-sender-label">AI ASSISTANT</span>
+          <div class="ai-msg bot">
+            Hi! 👋 I'm Saboor's AI assistant. I can answer questions about his skills, projects, education, certificates and experience. What would you like to know?
+          </div>
+        </div>`;
+    });
+  }
+});
