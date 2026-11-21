@@ -2032,3 +2032,24 @@ body.intro-locked .ai-chat-widget {
     max-width: 95%;
   }
 }
+
+/* Mobile par sirf compact circular Robot Icon dikhayein */
+@media (max-width: 768px) {
+  .ai-toggle-text {
+    display: none !important;
+  }
+
+  .ai-chat-toggle {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+  }
+
+  .ai-toggle-icon {
+    margin: 0;
+  }
+}
