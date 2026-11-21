@@ -813,7 +813,7 @@
   }
 
   /* =========================================================
-  8. CONTACT SECTION (COPY EMAIL & FORM VALIDATION)
+  8. CONTACT SECTION (DIRECT EMAIL SUBMISSION + COPY EMAIL)
      ========================================================= */
   function initContact() {
     const copyStatus = $('#copy-status');
@@ -832,8 +832,12 @@
       }
     });
 
-    const form = $('#contact-form'), status = $('#form-status');
+    const form = $('#contact-form');
+    const status = $('#form-status');
     if (!form) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const WEB3FORMS_KEY = 'fb0c3fcc-f335-40e1-8961-0df381aa200c'; // <-- Yahan apni Web3Forms key paste karein
 
     const rules = {
       name: v => v.trim().length >= 2 ? '' : 'Enter your name (at least 2 characters).',
@@ -841,7 +845,7 @@
       msg: v => v.trim().length >= 10 ? '' : 'Write a message of at least 10 characters.'
     };
 
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       let valid = true;
 
@@ -858,16 +862,57 @@
 
       const name = $('#f-name').value.trim();
       const email = $('#f-email').value.trim();
-      const msg = $('#f-msg').value.trim();
-      const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}`);
+      const message = $('#f-msg').value.trim();
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=${subject}&body=${body}`;
-      window.open(gmailUrl, '_blank', 'noopener');
-      if (status) status.textContent = '✓ Opening Gmail in a new tab to send your message...';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+      if (status) {
+        status.style.color = 'var(--accent-h)';
+        status.textContent = 'Sending your message...';
+      }
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            name: name,
+            email: email,
+            subject: `Portfolio Message from ${name}`,
+            message: message
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          if (status) {
+            status.style.color = 'var(--accent-h)';
+            status.textContent = '✓ Message sent successfully! I will get back to you soon.';
+          }
+          form.reset();
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        if (status) {
+          status.style.color = '#ff7b72';
+          status.innerHTML = `Could not send automatically. Please email directly at <a href="mailto:${EMAIL}">${EMAIL}</a>`;
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send message';
+        }
+      }
     });
   }
-
   /* =========================================================
   9. VANTA NET BACKGROUND (DYNAMIC THEME COLOR)
      ========================================================= */

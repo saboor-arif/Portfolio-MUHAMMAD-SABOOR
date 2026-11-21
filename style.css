@@ -1303,6 +1303,17 @@ html.modal-open { overflow: hidden; }
 .status { margin-top: 10px; font-size: .88rem; color: var(--accent-h); overflow-wrap: anywhere; }
 .status a { color: inherit; }
 
+/* Fix Browser Autofill White Background on Inputs */
+.form input:-webkit-autofill,
+.form input:-webkit-autofill:hover,
+.form input:-webkit-autofill:focus,
+.form textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--text) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--bg) inset !important;
+  border-color: var(--border);
+  transition: background-color 5000s ease-in-out 0s;
+}
 /* =========================================================
 11. FOOTER & SCROLL REVEAL ANIMATION
    ========================================================= */
