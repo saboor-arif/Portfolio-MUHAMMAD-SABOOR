@@ -2297,7 +2297,7 @@ footer .container,
   width: 100% !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  padding-left: 20px !important;
+  padding-left: 24px !important;
   justify-content: flex-start !important;
   text-align: left !important;
 }
@@ -2309,4 +2309,103 @@ footer span,
   margin-left: 0 !important;
   margin-right: 0 !important;
   text-align: left !important;
+}
+
+/* =========================================================
+   THEME-SYNCED ROTATING BORDER LINE (.intro-avatar-wrap)
+   ========================================================= */
+
+.intro-avatar-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px !important; /* Border ki motai */
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 28px rgba(46, 160, 67, 0.28) !important;
+  z-index: 1 !important;
+}
+
+/* Ghoomti hui glowing line */
+.intro-avatar-wrap::before {
+  content: "" !important;
+  position: absolute !important;
+  width: 170% !important;
+  height: 170% !important;
+  top: -35% !important;
+  left: -35% !important;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 230deg,
+    #2ea043 300deg,
+    #86efac 345deg,
+    #2ea043 360deg
+  ) !important;
+  animation: rotateAvatarBorder 2.6s linear infinite !important;
+  z-index: -1 !important;
+}
+
+/* Andar wali image ka apna static border hata kar clean fit karein */
+.intro-avatar-wrap .intro-avatar,
+#intro-avatar {
+  position: relative !important;
+  display: block !important;
+  border: none !important;
+  border-radius: 20px !important;
+  z-index: 2 !important;
+}
+
+/* 4 Themes ke mutabiq automatic color change */
+[data-theme="midnight"] .intro-avatar-wrap::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 230deg,
+    #38bdf8 300deg,
+    #bae6fd 345deg,
+    #38bdf8 360deg
+  ) !important;
+}
+[data-theme="midnight"] .intro-avatar-wrap {
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.28) !important;
+}
+
+[data-theme="charcoal"] .intro-avatar-wrap::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 230deg,
+    #fb923c 300deg,
+    #fed7aa 345deg,
+    #fb923c 360deg
+  ) !important;
+}
+[data-theme="charcoal"] .intro-avatar-wrap {
+  box-shadow: 0 0 28px rgba(251, 146, 60, 0.28) !important;
+}
+
+[data-theme="cherry"] .intro-avatar-wrap::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 230deg,
+    #ef4444 300deg,
+    #fecaca 345deg,
+    #ef4444 360deg
+  ) !important;
+}
+[data-theme="cherry"] .intro-avatar-wrap {
+  box-shadow: 0 0 28px rgba(239, 68, 68, 0.28) !important;
+}
+
+@keyframes rotateAvatarBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
