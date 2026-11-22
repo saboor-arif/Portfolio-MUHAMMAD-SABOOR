@@ -42,18 +42,17 @@
     },
     cherry: {
       name: 'Cherry Red',
-      s1: '#13090c',
-      s2: '#fb7185',
-      vantaColor: 0xe11d48,
-      vantaBg: 0x13090c,
-      metaBg: '#13090c',
-      cursorRgb: '251, 113, 133',
-      targetHue: 348
+      s1: '#0f0708',
+      s2: '#ef4444',
+      vantaColor: 0xef4444,
+      vantaBg: 0x0f0708,
+      metaBg: '#0f0708',
+      cursorRgb: '239, 68, 68',
+      targetHue: 0
     }
   };
 
- let activeThemeKey = 'emerald';
-
+  let activeThemeKey = 'emerald';
   let vantaInstance = null;
 
   document.documentElement.classList.add('js');
@@ -166,12 +165,11 @@
         const r = data[i], g = data[i + 1], b = data[i + 2];
         const [h, s, l] = rgbToHsl(r, g, b);
 
-        // Sirf Green range (shirt + background green icons) change hogi, face bilkul same rahega
         if (h >= 72 && h <= 168 && s > 0.14 && l > 0.06 && l < 0.88) {
           const distFromGreen = Math.abs(h - 125);
           const blend = Math.max(0, Math.min(1, (48 - distFromGreen) / 14));
           const boostedSat = Math.min(0.92, s * 1.18);
-          const adjustedLight = (targetHue === 26 || targetHue === 348)
+          const adjustedLight = (targetHue === 26 || targetHue === 0)
             ? Math.min(0.75, l * 1.08)
             : l;
 
@@ -199,14 +197,12 @@
     activeThemeKey = themeKey;
     window.__ACTIVE_CURSOR_RGB = cfg.cursorRgb;
 
-   document.documentElement.setAttribute('data-theme', themeKey);
+    document.documentElement.setAttribute('data-theme', themeKey);
 
     const metaTheme = $('meta[name="theme-color"]');
     if (metaTheme) metaTheme.setAttribute('content', cfg.metaBg);
 
-    const activeNameEl = $('#active-theme-name');
     const activeSwatchEl = $('#active-theme-swatch');
-    if (activeNameEl) activeNameEl.textContent = cfg.name;
     if (activeSwatchEl) {
       activeSwatchEl.style.setProperty('--s1', cfg.s1);
       activeSwatchEl.style.setProperty('--s2', cfg.s2);
@@ -265,7 +261,7 @@
   }
 
   /* =========================================================
-  1C. INTRO SPLASH SCREEN ("PLAY PORTFOLIO" + RETURN TO INTRO)
+  1D. INTRO SPLASH SCREEN ("PLAY PORTFOLIO" + RETURN TO INTRO)
      ========================================================= */
   function initIntroOverlay() {
     const overlay = $('#intro-overlay');
@@ -276,7 +272,7 @@
     let isEntered = false;
     let nameTypedOnce = false;
 
-   function enterPortfolio() {
+    function enterPortfolio() {
       if (isEntered) return;
       isEntered = true;
       overlay.classList.add('is-hidden');
@@ -377,7 +373,6 @@
     rest: '<path d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="2"/>',
     pf: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/>',
     ds: '<circle cx="12" cy="5" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M12 7v4M12 11l-6 5M12 11l6 5"/>',
-    algo: '<path d="M4 6h16M4 12h10M4 18h5"/><path d="M17 15l3 3-3 3"/>',
     oop: '<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h4a2 2 0 0 1 2 2v4"/>',
     db: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
     net: '<circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M12 3a14.5 14.5 0 0 0 0 18 14.5 14.5 0 0 0 0-18"/>',
@@ -496,7 +491,7 @@
       on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
     });
 
-   const onScroll = () => {
+    const onScroll = () => {
       if (document.body.classList.contains('intro-locked')) {
         setActive(secs[0].id);
         return;
@@ -530,7 +525,7 @@
   }
 
   /* =========================================================
-  7. GITHUB API INTEGRATION (AVATAR & PUBLIC REPOSITORIES)
+  7. GITHUB API INTEGRATION (PUBLIC REPOSITORIES)
      ========================================================= */
   const LANG_COLORS = {
     JavaScript: '#f1e05a', Python: '#3572A5', Java: '#b07219', 'C++': '#f34b7d',
@@ -540,10 +535,6 @@
 
   function fallbackCard(msg) {
     return `<div class="card fallback"><h3>${esc(msg)}</h3><p>My repositories are available directly on GitHub.</p><a class="btn primary" href="${PROFILE_URL}?tab=repositories" target="_blank" rel="noopener">Open github.com/${USER}</a></div>`;
-  }
-
-  function applyProfile(p) {
-    // Local avatar.png use ho rahi hai
   }
 
   function renderRepos(repos) {
@@ -578,10 +569,9 @@
 
   async function loadGitHub() {
     try {
-      const [pr, rr] = await Promise.all([fetch(API), fetch(API + '/repos?sort=updated&per_page=100')]);
-      if (!pr.ok || !rr.ok) throw new Error('GitHub API ' + (pr.ok ? rr.status : pr.status));
-      const [p, repos] = await Promise.all([pr.json(), rr.json()]);
-      applyProfile(p);
+      const rr = await fetch(API + '/repos?sort=updated&per_page=100');
+      if (!rr.ok) throw new Error('GitHub API ' + rr.status);
+      const repos = await rr.json();
       renderRepos(repos);
     } catch (err) {
       console.warn('GitHub data unavailable:', err.message);
@@ -811,7 +801,8 @@
       if (e.key === 'ArrowRight') renderModal(currentIdx + 1);
     });
   }
-/* =========================================================
+
+  /* =========================================================
   8. CONTACT SECTION (DIRECT EMAIL SUBMISSION + COPY EMAIL)
      ========================================================= */
   function initContact() {
@@ -822,20 +813,14 @@
       setTimeout(() => { copyStatus.textContent = ''; }, 2500);
     };
 
-    // Mobile par native Mail App aur Laptop/Desktop par seedha Gmail Web kholega
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     $$('a[href^="mailto:"]').forEach(link => {
-      link.addEventListener('click', e => {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (!isMobile) {
-          e.preventDefault();
-          const emailAddr = link.getAttribute('href').replace('mailto:', '').split('?')[0];
-          window.open(
-            `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddr)}`,
-            '_blank',
-            'noopener,noreferrer'
-          );
-        }
-      });
+      if (!isMobile) {
+        const emailAddr = link.getAttribute('href').replace('mailto:', '').split('?')[0];
+        link.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddr)}`;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
     });
 
     $('#copy-email')?.addEventListener('click', async () => {
@@ -928,6 +913,7 @@
       }
     });
   }
+
   /* =========================================================
   9. VANTA NET BACKGROUND (DYNAMIC THEME COLOR)
      ========================================================= */
@@ -1030,8 +1016,9 @@
   const trailDots = [];
   const ripples = [];
 
-  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn, .nav-dot';
-const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
+  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn';
+  const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
+
   const setHover = on => {
     ring.classList.toggle('hover', on);
     dot.classList.toggle('hover', on);
@@ -1229,7 +1216,7 @@ const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [ro
     let targetH = 40;
     let targetRadius = '50%';
 
-   if (activeEl && (
+    if (activeEl && (
       !activeEl.isConnected ||
       activeEl.offsetParent === null ||
       activeEl.closest('.is-hidden') ||
@@ -1325,216 +1312,232 @@ const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [ro
   }, { passive: true });
 })();
 
-/* ==================== SABOOR AI ASSISTANT LOGIC ==================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const WORKER_URL = "https://saboor-ai-assistant.saboorarif35.workers.dev";
+/* =========================================================
+13. SABOOR AI ASSISTANT LOGIC (SINGLE INSTANCE + LOCK)
+   ========================================================= */
+(() => {
+  'use strict';
 
-  const toggleBtn = document.getElementById("ai-chat-toggle");
-  const closeBtn = document.getElementById("ai-close-btn");
-  const clearBtn = document.getElementById("ai-clear-btn");
-  const chatWindow = document.getElementById("ai-chat-window");
-  const backdrop = document.getElementById("ai-chat-backdrop");
-  const chatForm = document.getElementById("ai-chat-form");
-  const chatInput = document.getElementById("ai-chat-input");
-  const messagesBox = document.getElementById("ai-chat-messages");
-  const scrollBottomBtn = document.getElementById("ai-scroll-bottom");
-  const chips = document.querySelectorAll(".ai-chip");
+  if (window.__SABOOR_AI_INITIALIZED__) return;
+  window.__SABOOR_AI_INITIALIZED__ = true;
 
-  if (!toggleBtn || !chatWindow) return;
+  function initAiChat() {
+    const WORKER_URL = "https://saboor-ai-assistant.saboorarif35.workers.dev";
 
-  let conversationHistory = [];
-  let isSending = false;
+    const toggleBtn = document.getElementById("ai-chat-toggle");
+    const closeBtn = document.getElementById("ai-close-btn");
+    const clearBtn = document.getElementById("ai-clear-btn");
+    const chatWindow = document.getElementById("ai-chat-window");
+    const backdrop = document.getElementById("ai-chat-backdrop");
+    const chatForm = document.getElementById("ai-chat-form");
+    const chatInput = document.getElementById("ai-chat-input");
+    const sendBtn = document.getElementById("ai-send-btn");
+    const messagesBox = document.getElementById("ai-chat-messages");
+    const scrollBottomBtn = document.getElementById("ai-scroll-bottom");
+    const chips = document.querySelectorAll(".ai-chip");
 
-  function openChat() {
-    chatWindow.classList.add("open");
-    if (backdrop) backdrop.classList.add("open");
-    chatWindow.setAttribute("aria-hidden", "false");
-    setTimeout(() => chatInput && chatInput.focus(), 100);
-  }
+    if (!toggleBtn || !chatWindow || !chatForm || !messagesBox) return;
 
-  function closeChat() {
-    chatWindow.classList.remove("open");
-    if (backdrop) backdrop.classList.remove("open");
-    chatWindow.setAttribute("aria-hidden", "true");
-  }
+    let conversationHistory = [];
+    let isSending = false;
 
-  toggleBtn.addEventListener("click", openChat);
-  if (closeBtn) closeBtn.addEventListener("click", closeChat);
-  if (backdrop) backdrop.addEventListener("click", closeChat);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && chatWindow.classList.contains("open")) {
-      closeChat();
+    function openChat() {
+      chatWindow.classList.add("open");
+      if (backdrop) backdrop.classList.add("open");
+      chatWindow.setAttribute("aria-hidden", "false");
+      setTimeout(() => chatInput && chatInput.focus(), 100);
     }
-  });
 
-  messagesBox.addEventListener("scroll", () => {
-    const isNearBottom =
-      messagesBox.scrollHeight - messagesBox.scrollTop - messagesBox.clientHeight < 60;
-    if (scrollBottomBtn) {
-      scrollBottomBtn.classList.toggle("visible", !isNearBottom);
+    function closeChat() {
+      chatWindow.classList.remove("open");
+      if (backdrop) backdrop.classList.remove("open");
+      chatWindow.setAttribute("aria-hidden", "true");
     }
-  });
 
-  if (scrollBottomBtn) {
-    scrollBottomBtn.addEventListener("click", () => {
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-    });
-  }
+    toggleBtn.addEventListener("click", openChat);
+    if (closeBtn) closeBtn.addEventListener("click", closeChat);
+    if (backdrop) backdrop.addEventListener("click", closeChat);
 
-  function formatText(text) {
-    const links = {
-      github:
-        document.querySelector('a[href*="github.com"]')?.href ||
-        "https://github.com/saboor-arif",
-      linkedin:
-        document.querySelector('a[href*="linkedin.com"]')?.href ||
-        "https://www.linkedin.com/in/muhammad-saboor-1a173938b",
-    };
-
-    const tokens = [];
-    const saveToken = (htmlLink) => {
-      const key = `@@LINK_${tokens.length}@@`;
-      tokens.push(htmlLink);
-      return key;
-    };
-
-    // 1. Safe HTML escape
-    let safe = text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-
-    // 2. Markdown links [Label](URL)
-    safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) =>
-      saveToken(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`)
-    );
-
-    // 3. Direct URLs (jaise GitHub link)
-    safe = safe.replace(/(https?:\/\/[^\s<)]+)/g, (url) => {
-      const cleanUrl = url.replace(/[.,!?]+$/, "");
-      const trailing = url.slice(cleanUrl.length);
-      return (
-        saveToken(
-          `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>`
-        ) + trailing
-      );
-    });
-
-    // 4. Sirf Contact Section, GitHub, aur LinkedIn ko clickable link banayein
-    safe = safe.replace(/\bContact Section\b/gi, (match) =>
-      saveToken(
-        `<a href="#contact" onclick="document.getElementById('ai-close-btn').click()">${match}</a>`
-      )
-    );
-
-    safe = safe.replace(/\bGitHub\b/g, () =>
-      saveToken(`<a href="${links.github}" target="_blank" rel="noopener noreferrer">GitHub</a>`)
-    );
-
-    safe = safe.replace(/\bLinkedIn\b/g, () =>
-      saveToken(`<a href="${links.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`)
-    );
-
-    // 5. Bold (**text**) aur line breaks
-    safe = safe
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\n/g, "<br>");
-
-    // 6. Tokens wapas lagayein
-    tokens.forEach((linkHtml, i) => {
-      safe = safe.replace(`@@LINK_${i}@@`, linkHtml);
-    });
-
-    return safe;
-  }
-
-  function appendMessage(role, text, isTyping = false) {
-    if (role === "user") {
-      const div = document.createElement("div");
-      div.className = "ai-msg user";
-      div.textContent = text;
-      messagesBox.appendChild(div);
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-      return div;
-    } else {
-      const group = document.createElement("div");
-      group.className = "ai-msg-group bot";
-
-      const label = document.createElement("span");
-      label.className = "ai-sender-label";
-      label.textContent = "AI ASSISTANT";
-
-      const msgDiv = document.createElement("div");
-      msgDiv.className = "ai-msg bot";
-      if (isTyping) {
-        msgDiv.textContent = text;
-      } else {
-        msgDiv.innerHTML = formatText(text);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && chatWindow.classList.contains("open")) {
+        closeChat();
       }
+    });
 
-      group.appendChild(label);
-      group.appendChild(msgDiv);
-      messagesBox.appendChild(group);
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-      return msgDiv;
+    messagesBox.addEventListener("scroll", () => {
+      const isNearBottom =
+        messagesBox.scrollHeight - messagesBox.scrollTop - messagesBox.clientHeight < 60;
+      if (scrollBottomBtn) {
+        scrollBottomBtn.classList.toggle("visible", !isNearBottom);
+      }
+    });
+
+    if (scrollBottomBtn) {
+      scrollBottomBtn.addEventListener("click", () => {
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      });
     }
-  }
 
-  async function sendMessage(text) {
-    if (isSending) return;
-    const trimmed = text.trim();
-    if (!trimmed) return;
+    function formatText(text) {
+      const links = {
+        github:
+          document.querySelector('a[href*="github.com"]')?.href ||
+          "https://github.com/saboor-arif",
+        linkedin:
+          document.querySelector('a[href*="linkedin.com"]')?.href ||
+          "https://www.linkedin.com/in/muhammad-saboor-1a173938b",
+      };
 
-    isSending = true;
-    appendMessage("user", trimmed);
-    conversationHistory.push({ role: "user", parts: [{ text: trimmed }] });
+      const tokens = [];
+      const saveToken = (htmlLink) => {
+        const key = `@@LINK_${tokens.length}@@`;
+        tokens.push(htmlLink);
+        return key;
+      };
 
-    const typingMsg = appendMessage("bot", "Thinking...", true);
+      let safe = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 
-    try {
-      const res = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: conversationHistory }),
+      safe = safe.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) =>
+        saveToken(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`)
+      );
+
+      safe = safe.replace(/(https?:\/\/[^\s<)]+)/g, (url) => {
+        const cleanUrl = url.replace(/[.,!?]+$/, "");
+        const trailing = url.slice(cleanUrl.length);
+        return (
+          saveToken(
+            `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>`
+          ) + trailing
+        );
       });
 
-      const data = await res.json();
-      const reply = data.reply || "Sorry, I couldn't process that right now.";
+      safe = safe.replace(/\bContact Section\b/gi, (match) =>
+        saveToken(
+          `<a href="#contact" onclick="document.getElementById('ai-close-btn').click()">${match}</a>`
+        )
+      );
 
-      typingMsg.innerHTML = formatText(reply);
-      conversationHistory.push({ role: "model", parts: [{ text: reply }] });
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-    } catch (err) {
-      typingMsg.textContent = "Network error. Please check your connection.";
-    } finally {
-      isSending = false;
+      safe = safe.replace(/\bGitHub\b/g, () =>
+        saveToken(`<a href="${links.github}" target="_blank" rel="noopener noreferrer">GitHub</a>`)
+      );
+
+      safe = safe.replace(/\bLinkedIn\b/g, () =>
+        saveToken(`<a href="${links.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`)
+      );
+
+      safe = safe
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+
+      tokens.forEach((linkHtml, i) => {
+        safe = safe.replace(`@@LINK_${i}@@`, linkHtml);
+      });
+
+      return safe;
+    }
+
+    function appendMessage(role, text, isTyping = false) {
+      if (role === "user") {
+        const div = document.createElement("div");
+        div.className = "ai-msg user";
+        div.textContent = text;
+        messagesBox.appendChild(div);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+        return div;
+      } else {
+        const group = document.createElement("div");
+        group.className = "ai-msg-group bot";
+
+        const label = document.createElement("span");
+        label.className = "ai-sender-label";
+        label.textContent = "AI ASSISTANT";
+
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "ai-msg bot";
+        if (isTyping) {
+          msgDiv.textContent = text;
+        } else {
+          msgDiv.innerHTML = formatText(text);
+        }
+
+        group.appendChild(label);
+        group.appendChild(msgDiv);
+        messagesBox.appendChild(group);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+        return msgDiv;
+      }
+    }
+
+    async function sendMessage(text) {
+      if (isSending) return;
+      const trimmed = text.trim();
+      if (!trimmed) return;
+
+      isSending = true;
+      if (sendBtn) sendBtn.disabled = true;
+
+      appendMessage("user", trimmed);
+      conversationHistory.push({ role: "user", parts: [{ text: trimmed }] });
+
+      const typingMsg = appendMessage("bot", "Thinking...", true);
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ history: conversationHistory }),
+        });
+
+        const data = await res.json();
+        const reply = data.reply || "Sorry, I couldn't process that right now.";
+
+        typingMsg.innerHTML = formatText(reply);
+        conversationHistory.push({ role: "model", parts: [{ text: reply }] });
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      } catch (err) {
+        typingMsg.textContent = "Network error. Please check your connection.";
+      } finally {
+        isSending = false;
+        if (sendBtn) sendBtn.disabled = false;
+      }
+    }
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (isSending) return;
+      const val = chatInput.value;
+      chatInput.value = "";
+      sendMessage(val);
+    });
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        if (isSending) return;
+        sendMessage(chip.textContent);
+      });
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        if (isSending) return;
+        conversationHistory = [];
+        messagesBox.innerHTML = `
+          <div class="ai-msg-group bot">
+            <span class="ai-sender-label">AI ASSISTANT</span>
+            <div class="ai-msg bot">
+              Hi! 👋 I'm Saboor's AI assistant. I can answer questions about his skills, projects, education, certificates and experience. What would you like to know?
+            </div>
+          </div>`;
+      });
     }
   }
 
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const val = chatInput.value;
-    chatInput.value = "";
-    sendMessage(val);
-  });
-
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      sendMessage(chip.textContent);
-    });
-  });
-
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      conversationHistory = [];
-      messagesBox.innerHTML = `
-        <div class="ai-msg-group bot">
-          <span class="ai-sender-label">AI ASSISTANT</span>
-          <div class="ai-msg bot">
-            Hi! 👋 I'm Saboor's AI assistant. I can answer questions about his skills, projects, education, certificates and experience. What would you like to know?
-          </div>
-        </div>`;
-    });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAiChat, { once: true });
+  } else {
+    initAiChat();
   }
-});
+})();
