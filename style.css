@@ -2272,3 +2272,14 @@ section,
     padding-right: 16px !important;
   }
 }
+
+/* 6. Footer Full-Bleed Edge-to-Edge Fix (PC + Mobile) */
+footer,
+.footer,
+.footer-bottom {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  box-sizing: border-box !important;
+}
