@@ -2297,7 +2297,7 @@ footer .container,
   width: 100% !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
-  padding-left: 0 !important;
+  padding-left: 20px !important;
   justify-content: flex-start !important;
   text-align: left !important;
 }
