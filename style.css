@@ -2172,67 +2172,35 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
 }
 
 /* =========================================================
-   DESKTOP / PC FULL-PAGE POLISH (1024px+)
+   FLUID FULL-SCREEN RESPONSIVE LAYOUT (LAPTOP + MOBILE)
    ========================================================= */
-@media (min-width: 1024px) {
-  /* 1. Har section ka max-width aur side padding barabar rakhein */
-  section,
-  .section {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 95px 32px;
-  }
 
-  /* 2. Navbar ke neeche section headings kabhi cut na hon */
-  section[id] {
-    scroll-margin-top: 84px;
-  }
-
-  /* 3. Saare grids mein cards ki height equal rahe (no uneven gaps) */
-  .grid,
-  .cards-grid,
-  .projects-grid,
-  .skills-grid,
-  .services-grid,
-  .certificates-grid,
-  .contact-grid,
-  .contact-wrapper {
-    align-items: stretch;
-    gap: 28px;
-  }
-
-  .card,
-  .project-card,
-  .skill-card,
-  .service-card,
-  .cert-card,
-  .contact-info-card,
-  .contact-form-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  /* 4. Section headings aur subtitles ka clean hierarchy */
-  .section-header,
-  .section-title-wrap {
-    margin-bottom: 44px;
-  }
-
-  /* 5. Footer alignment & chatbot button ke saath clean clearance */
-  footer,
-  .footer {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 28px 32px 36px;
-  }
+/* 1. Navbar ko poori screen width par rakhne ke liye */
+header,
+nav,
+.navbar,
+.nav-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: clamp(20px, 4vw, 64px) !important;
+  padding-right: clamp(20px, 4vw, 64px) !important;
 }
 
-/* =========================================================
-   INTRO / FRONT OVERLAY FULL-SCREEN FIX ("PLAY PORTFOLIO")
-   ========================================================= */
+/* 2. Saare sections aur footer screen ke mutabiq wide rahein (beech mein squeeze na hon) */
+section,
+.section,
+.container,
+footer,
+.footer {
+  width: 100% !important;
+  max-width: 1520px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: clamp(20px, 4vw, 64px) !important;
+  padding-right: clamp(20px, 4vw, 64px) !important;
+}
+
+/* 3. Intro / Front "Play Portfolio" overlay 100% full-screen rahe */
 #intro,
 #intro-overlay,
 #intro-screen,
@@ -2247,10 +2215,45 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
   max-width: none !important;
   margin: 0 !important;
   padding: 24px !important;
+}
+
+/* 4. Cards ki height equal rahe (no uneven gaps) */
+.grid,
+.cards-grid,
+.projects-grid,
+.skills-grid,
+.services-grid,
+.certificates-grid,
+.contact-grid,
+.contact-wrapper {
+  align-items: stretch;
+}
+
+.card,
+.project-card,
+.skill-card,
+.service-card,
+.cert-card,
+.contact-info-card,
+.contact-form-card {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 9999;
+  justify-content: space-between;
+}
+
+/* 5. Mobile par proper compact padding */
+@media (max-width: 768px) {
+  header,
+  nav,
+  .navbar,
+  .nav-container,
+  section,
+  .section,
+  .container,
+  footer,
+  .footer {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
 }
