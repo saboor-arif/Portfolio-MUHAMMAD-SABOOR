@@ -1339,7 +1339,6 @@
     }
   }, { passive: true });
 })();
-
 /* =========================================================
 13. SABOOR AI ASSISTANT LOGIC (SINGLE INSTANCE + LOCK)
    ========================================================= */
@@ -1362,6 +1361,7 @@
     const sendBtn = document.getElementById("ai-send-btn");
     const messagesBox = document.getElementById("ai-chat-messages");
     const scrollBottomBtn = document.getElementById("ai-scroll-bottom");
+    const suggestionsBox = document.querySelector(".ai-suggestions");
     const chips = document.querySelectorAll(".ai-chip");
 
     if (!toggleBtn || !chatWindow || !chatForm || !messagesBox) return;
@@ -1370,13 +1370,13 @@
     let isSending = false;
 
     function openChat() {
-    chatWindow.classList.add("open");
-    if (backdrop) backdrop.classList.add("open");
-    chatWindow.setAttribute("aria-hidden", "false");
-    if (window.innerWidth > 768) {
-      setTimeout(() => chatInput && chatInput.focus(), 100);
+      chatWindow.classList.add("open");
+      if (backdrop) backdrop.classList.add("open");
+      chatWindow.setAttribute("aria-hidden", "false");
+      if (window.innerWidth > 768) {
+        setTimeout(() => chatInput && chatInput.focus(), 100);
+      }
     }
-  }
 
     function closeChat() {
       chatWindow.classList.remove("open");
@@ -1506,6 +1506,9 @@
       const trimmed = text.trim();
       if (!trimmed) return;
 
+      // Pehla message bhejte hi suggestions hide kar dein
+      if (suggestionsBox) suggestionsBox.style.display = "none";
+
       isSending = true;
       if (sendBtn) sendBtn.disabled = true;
 
@@ -1561,6 +1564,9 @@
               Hi! 👋 I'm Saboor's AI assistant. I can answer questions about his skills, projects, education, certificates and experience. What would you like to know?
             </div>
           </div>`;
+
+        // New chat / reset par suggestions dubara show kar dein
+        if (suggestionsBox) suggestionsBox.style.display = "flex";
       });
     }
   }
