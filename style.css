@@ -2170,28 +2170,42 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
     flex-shrink: 0;
   }
 }
-
 /* =========================================================
    FLUID FULL-SCREEN RESPONSIVE LAYOUT (LAPTOP + MOBILE)
    ========================================================= */
 
-/* 1. Navbar ko poori screen width par rakhne ke liye */
+/* 1. Navbar AUR Footer dono ko poori screen width par rakhne ke liye */
 header,
 nav,
 .navbar,
-.nav-container {
+.nav-container,
+footer,
+.footer,
+.footer-bottom {
   width: 100% !important;
   max-width: 100% !important;
   padding-left: clamp(20px, 4vw, 64px) !important;
   padding-right: clamp(20px, 4vw, 64px) !important;
 }
 
-/* 2. Saare sections aur footer screen ke mutabiq wide rahein (beech mein squeeze na hon) */
+/* Footer text strictly left-aligned */
+footer .container,
+.footer .container,
+.footer-content {
+  max-width: 100% !important;
+  width: 100% !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  gap: 12px;
+}
+
+/* 2. Saare sections screen ke mutabiq wide rahein (beech mein squeeze na hon) */
 section,
 .section,
-.container,
-footer,
-.footer {
+.container {
   width: 100% !important;
   max-width: 1520px !important;
   margin-left: auto !important;
@@ -2252,7 +2266,8 @@ footer,
   .section,
   .container,
   footer,
-  .footer {
+  .footer,
+  .footer-bottom {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
