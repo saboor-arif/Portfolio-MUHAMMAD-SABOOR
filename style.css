@@ -2007,3 +2007,122 @@ body.intro-locked .ai-chat-widget {
     background: rgba(255, 255, 255, 0.09);
   }
 }
+
+/* =========================================================
+15. AI CHATBOT SPARKLE CURSOR (ONLY INSIDE CHATBOT)
+   ========================================================= */
+.cursor-sparkle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  pointer-events: none;
+  z-index: 100001;
+  opacity: 0;
+  color: var(--accent-h);
+  filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.9))
+          drop-shadow(0 0 16px rgba(var(--accent-rgb), 0.6));
+  transition: opacity 0.18s ease, color 0.3s ease;
+  will-change: transform;
+}
+
+.cursor-sparkle svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cursor-sparkle.show {
+  opacity: 1;
+}
+
+.cursor-sparkle.hover svg {
+  transform: rotate(45deg) scale(1.3);
+  color: #ffffff;
+}
+
+/* Chatbot ke andar default dot/ring hide aur sparkle show */
+html.in-ai-chat .cursor-dot,
+html.in-ai-chat .cursor-ring {
+  opacity: 0 !important;
+}
+
+.ai-chat-window,
+.ai-chat-window * {
+  cursor: none !important;
+}
+
+.ai-chat-window input {
+  cursor: text !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-sparkle { display: none !important; }
+}
+
+/* =========================================================
+COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
+   ========================================================= */
+.ai-chat-window::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(250px circle at 20% 20%, rgba(var(--accent-rgb), 0.28), transparent 70%),
+    radial-gradient(270px circle at 80% 80%, rgba(var(--accent-dark-rgb), 0.32), transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 140% 140%, 140% 140%, 32px 32px, 32px 32px;
+  animation: aiCombinedOrbs360 4s linear infinite;
+}
+
+@keyframes aiCombinedOrbs360 {
+  0% {
+    background-position: 0% 0%, 100% 100%, 0 0, 0 0;
+  }
+  25% {
+    background-position: 100% 0%, 0% 100%, 0 0, 0 0;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%, 0 0, 0 0;
+  }
+  75% {
+    background-position: 0% 100%, 100% 0%, 0 0, 0 0;
+  }
+  100% {
+    background-position: 0% 0%, 100% 100%, 0 0, 0 0;
+  }
+}
+
+.ai-chat-window::after {
+  content: "</>  SABOOR AI ASSISTANT";
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-size: clamp(1.15rem, 2.8vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--accent-h);
+  opacity: 0.22;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  text-shadow:
+    0 0 18px rgba(var(--accent-rgb), 0.75),
+    0 0 36px rgba(var(--accent-rgb), 0.45);
+}
+
+.ai-chat-header,
+.ai-chat-messages,
+.ai-suggestions,
+.ai-chat-input-area {
+  position: relative;
+  z-index: 1;
+}

@@ -966,7 +966,7 @@
 })();
 
 /* =========================================================
-11. CUSTOM CURSOR (MAGNETIC RING + TRAIL + CLICK RIPPLE)
+11. CUSTOM CURSOR (MAGNETIC RING + TRAIL + AI CHAT SPARKLE)
    ========================================================= */
 (() => {
   'use strict';
@@ -978,16 +978,20 @@
   const fxCtx = fxCanvas.getContext('2d');
   const dot = document.createElement('div');
   const ring = document.createElement('div');
+  const sparkle = document.createElement('div');
 
   fxCanvas.className = 'cursor-fx-canvas';
   dot.className = 'cursor-dot';
   ring.className = 'cursor-ring';
+  sparkle.className = 'cursor-sparkle';
+  sparkle.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L14.3 9.7L23 12L14.3 14.3L12 23L9.7 14.3L1 12L9.7 9.7L12 1Z"/></svg>`;
 
   fxCanvas.setAttribute('aria-hidden', 'true');
   dot.setAttribute('aria-hidden', 'true');
   ring.setAttribute('aria-hidden', 'true');
+  sparkle.setAttribute('aria-hidden', 'true');
 
-  document.body.append(fxCanvas, ring, dot);
+  document.body.append(fxCanvas, ring, dot, sparkle);
   document.documentElement.classList.add('has-cursor');
 
   let viewW = 0;
@@ -1012,17 +1016,29 @@
   let rw = 40, rh = 40;
   let activeEl = null;
   let lastTrailX = null, lastTrailY = null;
+  let inChat = false;
 
   const trailDots = [];
   const ripples = [];
 
-  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn';
+  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn, .nav-dot';
   const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
 
   const setHover = on => {
     ring.classList.toggle('hover', on);
     dot.classList.toggle('hover', on);
+    sparkle.classList.toggle('hover', on);
   };
+
+  function updateChatCursorState(target) {
+    const inside = Boolean(target && target.closest('.ai-chat-window.open'));
+    if (inside !== inChat) {
+      inChat = inside;
+      document.documentElement.classList.toggle('in-ai-chat', inChat);
+      sparkle.classList.toggle('show', inChat);
+      if (inChat) clearMagnetic();
+    }
+  }
 
   function spawnTrail(x, y) {
     if (lastTrailX !== null && lastTrailY !== null) {
@@ -1074,11 +1090,14 @@
     }
 
     const underCursor = document.elementFromPoint(mx, my);
-    const hoverTarget = underCursor ? underCursor.closest(HOVER_SEL) : null;
-    const magTarget = underCursor ? underCursor.closest(MAGNET_SEL) : null;
+    updateChatCursorState(underCursor);
 
+    const hoverTarget = underCursor ? underCursor.closest(HOVER_SEL) : null;
     setHover(Boolean(hoverTarget));
 
+    if (inChat) return;
+
+    const magTarget = underCursor ? underCursor.closest(MAGNET_SEL) : null;
     if (magTarget !== activeEl) {
       if (activeEl) {
         activeEl.style.transform = '';
@@ -1109,24 +1128,32 @@
     mx = e.clientX;
     my = e.clientY;
     dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+    sparkle.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
 
-    dot.classList.add('show');
-    ring.classList.add('show');
-    spawnTrail(mx, my);
+    updateChatCursorState(e.target);
 
-    if (activeEl && !activeEl.classList.contains('theme-option')) {
-      const rect = activeEl.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const pullX = (mx - cx) * 0.22;
-      const pullY = (my - cy) * 0.22;
-      activeEl.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+    if (!inChat) {
+      dot.classList.add('show');
+      ring.classList.add('show');
+      spawnTrail(mx, my);
+
+      if (activeEl && !activeEl.classList.contains('theme-option')) {
+        const rect = activeEl.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const pullX = (mx - cx) * 0.22;
+        const pullY = (my - cy) * 0.22;
+        activeEl.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
+      }
     }
   });
 
   document.addEventListener('mouseleave', () => {
     dot.classList.remove('show');
     ring.classList.remove('show');
+    sparkle.classList.remove('show');
+    inChat = false;
+    document.documentElement.classList.remove('in-ai-chat');
     lastTrailX = null;
     lastTrailY = null;
     clearMagnetic();
@@ -1134,7 +1161,7 @@
 
   document.addEventListener('mousedown', e => {
     ring.classList.add('down');
-    spawnRipple(e.clientX, e.clientY);
+    if (!inChat) spawnRipple(e.clientX, e.clientY);
     if (e.target.closest('.theme-option, .play-portfolio-btn, .intro-return-btn')) {
       setTimeout(clearMagnetic, 0);
     }
@@ -1143,9 +1170,11 @@
   document.addEventListener('mouseup', () => ring.classList.remove('down'));
 
   document.addEventListener('mouseover', e => {
+    updateChatCursorState(e.target);
     const hoverTarget = e.target.closest(HOVER_SEL);
     if (hoverTarget) setHover(true);
 
+    if (inChat) return;
     const magTarget = e.target.closest(MAGNET_SEL);
     if (magTarget && magTarget !== activeEl) {
       if (activeEl) activeEl.style.transform = '';
@@ -1225,7 +1254,7 @@
       clearMagnetic();
     }
 
-    if (activeEl) {
+    if (activeEl && !inChat) {
       const rect = activeEl.getBoundingClientRect();
       targetX = rect.left + rect.width / 2;
       targetY = rect.top + rect.height / 2;
@@ -1251,7 +1280,6 @@
     requestAnimationFrame(animate);
   })();
 })();
-
 /* =========================================================
 12. 3D INTERACTIVE CARD TILT EFFECT
    ========================================================= */
