@@ -1013,7 +1013,7 @@
 
   let mx = -200, my = -200;
   let rx = -200, ry = -200;
-  let rw = 40, rh = 40;
+  let rw = 26, rh = 26;
   let activeEl = null;
   let lastTrailX = null, lastTrailY = null;
   let inChat = false;
@@ -1239,10 +1239,10 @@
   }
 
   (function animate() {
-    let targetX = mx;
+   let targetX = mx;
     let targetY = my;
-    let targetW = 40;
-    let targetH = 40;
+    let targetW = 26;
+    let targetH = 26;
     let targetRadius = '50%';
 
     if (activeEl && (
@@ -1370,11 +1370,13 @@
     let isSending = false;
 
     function openChat() {
-      chatWindow.classList.add("open");
-      if (backdrop) backdrop.classList.add("open");
-      chatWindow.setAttribute("aria-hidden", "false");
+    chatWindow.classList.add("open");
+    if (backdrop) backdrop.classList.add("open");
+    chatWindow.setAttribute("aria-hidden", "false");
+    if (window.innerWidth > 768) {
       setTimeout(() => chatInput && chatInput.focus(), 100);
     }
+  }
 
     function closeChat() {
       chatWindow.classList.remove("open");

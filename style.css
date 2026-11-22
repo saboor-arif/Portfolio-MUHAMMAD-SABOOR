@@ -1435,9 +1435,9 @@ html.has-cursor textarea { cursor: text !important; }
 .cursor-dot.show { opacity: 1; }
 
 .cursor-ring {
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
   border-radius: 50%;
   z-index: 99999;
   border: 1.5px solid rgba(var(--accent-rgb), 0.85);
@@ -1818,12 +1818,15 @@ body.intro-locked .ai-chat-widget {
   display: flex;
 }
 
-/* Quick Chips */
+/* Quick Chips (Vertical Stack) */
 .ai-suggestions {
   display: flex;
-  gap: 8px;
-  padding: 8px 20px 10px;
-  overflow-x: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 6px 20px 10px;
+  max-height: 165px;
+  overflow-y: auto;
   scrollbar-width: none;
 }
 
@@ -1837,18 +1840,23 @@ body.intro-locked .ai-chat-widget {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: #f1f5f9;
-  padding: 6px 13px;
-  border-radius: 999px;
+  padding: 7px 14px;
+  border-radius: 14px;
   font-size: 12.5px;
-  white-space: nowrap;
+  line-height: 1.35;
+  text-align: left;
+  width: fit-content;
+  max-width: 100%;
+  white-space: normal;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.15s ease;
 }
 
 .ai-chip:hover {
   border-color: var(--ai-accent);
   color: #fff;
   background: rgba(var(--accent-rgb), 0.22);
+  transform: translateX(3px);
 }
 
 /* Bottom Input Area */
@@ -2100,18 +2108,20 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
 }
 
 .ai-chat-window::after {
-  content: "</>  SABOOR AI ASSISTANT";
+  content: "</> SABOOR AI ASSISTANT";
   position: absolute;
   top: 48%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 90%;
+  text-align: center;
   font-family: var(--mono);
-  font-size: clamp(1.15rem, 2.8vw, 2rem);
+  font-size: clamp(0.85rem, 3.8vw, 1.85rem);
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--accent-h);
-  opacity: 0.22;
-  white-space: nowrap;
+  opacity: 0.2;
+  white-space: normal;
   pointer-events: none;
   z-index: 0;
   text-shadow:
@@ -2126,3 +2136,38 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
   position: relative;
   z-index: 1;
 }
+
+/* Mobile par Keyboard & Header Safe Layout */
+@media (max-width: 768px) {
+  .ai-chat-window {
+    top: 10px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    transform: scale(0.96) !important;
+    border-radius: 20px;
+  }
+
+  .ai-chat-window.open {
+    transform: scale(1) !important;
+  }
+
+  .ai-chat-header {
+    flex-shrink: 0;
+    padding: 12px 14px;
+  }
+
+  .ai-chat-messages {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .ai-suggestions,
+  .ai-chat-input-area {
+    flex-shrink: 0;
+  }
+}
+
