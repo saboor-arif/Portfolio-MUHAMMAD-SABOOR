@@ -11,7 +11,11 @@
 <meta property="og:description" content="Software development, computer science fundamentals, and live GitHub projects by MUHAMMAD SABOOR.">
 <meta property="og:url" content="https://github.com/saboor-arif">
 <meta property="og:image" content="https://github.com/saboor-arif.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23238636'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='700' text-anchor='middle' fill='%23fff'%3E%26lt;/%26gt;%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23238636'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='700' text-anchor='middle' fill='%23fff'%3E%26lt;/%26gt;%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="fonts/montserrat-v31-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/montserrat-v31-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/montserrat-v31-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="intro-locked">
@@ -58,7 +62,6 @@
           <span class="option-text">Cherry Red</span>
           <span class="option-check">✓</span>
         </button>
-        
       </div>
     </div>
 
@@ -96,9 +99,14 @@
       </button>
     </div>
   </nav>
+  <!-- Growing Scroll Progress Line -->
+  <div class="scroll-progress-track" aria-hidden="true">
+    <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+  </div>
 </header>
 
 <main id="main">
+  <!-- ==================== HERO & ABOUT SECTION ==================== -->
   <section id="about" class="hero section reveal" aria-labelledby="hero-name">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="wrap">
@@ -107,10 +115,31 @@
           <h2 class="hello">Hi, I'm</h2>
           <h1 id="hero-name">MUHAMMAD SABOOR</h1>
           <p class="role">Computer Science Student <br> Learn | Code | Debug | Repeat <br> Exploring, Learning and Building</p>
-          <p class="bio" id="hero-bio">“Always curious, always improving, and always building something new.”<br>As an enthusiastic Computer Science student, I am dedicated to developing strong, resilient foundations in core computing through a primary focus on object-oriented programming, data structures, algorithms, and computational thinking. As a passionate developer who enjoys exploring technology, solving problems, and creating meaningful digital experiences, I believe in continuous learning, writing clean code, and turning creative ideas into practical solutions.</p>
+
+          <div class="hero-bio-card" id="hero-bio">
+            <blockquote class="hero-quote">
+              “Always <span class="serif-italic">curious</span>, always <span class="serif-italic">improving</span>, and always <span class="serif-italic">building</span> something new.”
+            </blockquote>
+            <p class="bio-para">
+              I’m a Computer Science student &amp; dedicated to developing strong, resilient foundations in core computing and enjoys exploring technology, solving problems, and creating meaningful digital experiences.<br>I believe in continuous learning, writing clean code, and turning creative ideas into practical solutions.</p>
+ 
+            </p>
+  
+          </div>
+
           <div class="actions">
-            <a class="btn primary" href="#projects">Explore Projects</a>
-            <a class="btn primary" href="#services">Services</a>
+            <a class="btn btn-pill-solid" href="#projects">
+              <span>View my work</span>
+              <span class="btn-arrow">&rarr;</span>
+            </a>
+            <a class="btn btn-pill-outline" href="resume.pdf" download>
+              <span>Download Resume</span>
+              <span class="btn-arrow-down">&darr;</span>
+            </a>
+            <a class="btn btn-pill-outline" href="#services">
+              <span>Services</span>
+            </a>
+          
           </div>
         </div>
 
@@ -143,7 +172,10 @@
       </div>
 
       <div class="about-details">
-        <h2 id="about-h">About Me</h2>
+        <div class="section-header-editorial">
+          <span class="section-kicker">01 &mdash; ABOUT ME</span>
+          <h2 id="about-h" class="editorial-title">How I <span class="serif-italic">build</span> &amp; think.</h2>
+        </div>
         <div class="about-grid">
           <div class="card about-main">
             <p>I'm currently an undergraduate Computer Science student and developer with a strong interest in how software works from the ground up: memory and data structures in Python and C++, object-oriented design in C++ and Python, modern web interfaces built with HTML, CSS, and JavaScript as well as exploring Machine Learning and application deployment in Cloud Computing.</p>
@@ -160,18 +192,26 @@
     </div>
   </section>
 
+  <!-- ==================== TECHNICAL SKILLS SECTION ==================== -->
   <section id="skills" class="section reveal" aria-labelledby="skills-h">
     <div class="wrap">
-      <h2 id="skills-h">Technical skills</h2>
-      <p class="lead">Badges are my own labels for each skill.</p>
+      <div class="section-header-editorial">
+        <span class="section-kicker">02 &mdash; TECHNICAL SKILLS</span>
+        <h2 id="skills-h" class="editorial-title">What I <span class="serif-italic">have</span> in my skill set.</h2>
+        <p class="lead">Languages, core computer science foundations, and tools I work with regularly.</p>
+      </div>
       <div id="skills-root"><noscript>Enable JavaScript to see the skills grid.</noscript></div>
     </div>
   </section>
 
+  <!-- ==================== SERVICES SECTION ==================== -->
   <section id="services" class="section reveal" aria-labelledby="services-h">
     <div class="wrap">
-      <h2 id="services-h">Services</h2>
-      <p class="lead">End-to-end software, web, and mobile development services tailored to your requirements.</p>
+      <div class="section-header-editorial">
+        <span class="section-kicker">03 &mdash; SERVICES</span>
+        <h2 id="services-h" class="editorial-title">What I can <span class="serif-italic">do</span> for you.</h2>
+        <p class="lead">End-to-end software, web, and mobile development services tailored to your requirements.</p>
+      </div>
       <div class="services-grid">
         <article class="card service-card">
           <div class="service-ico" aria-hidden="true">
@@ -237,10 +277,14 @@
     </div>
   </section>
 
+  <!-- ==================== PROJECTS SECTION ==================== -->
   <section id="projects" class="section reveal" aria-labelledby="projects-h">
     <div class="wrap">
-      <h2 id="projects-h">Projects</h2>
-      <p class="lead">Pulled live from my public GitHub repositories, most recently updated first.</p>
+      <div class="section-header-editorial">
+        <span class="section-kicker">04 &mdash; PROJECTS</span>
+        <h2 id="projects-h" class="editorial-title">Things I've <span class="serif-italic">built</span> &amp; shipped.</h2>
+        <p class="lead">Pulled live from my public GitHub repositories, most recently updated first.</p>
+      </div>
       <div id="projects-grid" class="projects" aria-live="polite"><p class="muted">Loading repositories…</p></div>
     </div>
   </section>
@@ -248,8 +292,11 @@
   <!-- ==================== CERTIFICATES SECTION ==================== -->
   <section id="certificates" class="section reveal" aria-labelledby="certificates-h">
     <div class="wrap">
-      <h2 id="certificates-h">Certificates</h2>
-      <p class="lead">Verified course completions and technical credentials. Click any certificate card to inspect it in full view.</p>
+      <div class="section-header-editorial">
+        <span class="section-kicker">05 &mdash; CERTIFICATES</span>
+        <h2 id="certificates-h" class="editorial-title">What I've <span class="serif-italic">earned</span> &amp; verified.</h2>
+        <p class="lead">Verified course completions and technical credentials. Click any certificate card to inspect it in full view.</p>
+      </div>
       <div id="certificates-grid" class="certs-grid"></div>
     </div>
   </section>
@@ -257,8 +304,11 @@
   <!-- ==================== CONTACT SECTION ==================== -->
   <section id="contact" class="section reveal" aria-labelledby="contact-h">
     <div class="wrap">
-      <h2 id="contact-h">Contact</h2>
-      <p class="lead"><i>Good code is better when built together.</i><br> Let’s connect and turn your concepts into reality and code your next big project. <br>Looking to collaborate? Drop a message anytime!</p>
+      <div class="section-header-editorial">
+        <span class="section-kicker">06 &mdash; CONTACT</span>
+        <h2 id="contact-h" class="editorial-title">Let's <span class="serif-italic">connect</span> &amp; build together.</h2>
+        <p class="lead"><i>Good code is better when built together.</i><br> Let’s connect and turn your concepts into reality and code your next big project. <br>Looking to collaborate? Drop a message anytime!</p>
+      </div>
 
       <div class="contact-grid">
         <div class="card">
@@ -375,10 +425,9 @@
     </div>
 
     <div class="cert-modal-foot">
-      <div class="cert-tags" id="cert-modal-tags"></div>
+      <a id="cert-open-raw" class="cert-direct-link" href="#" target="_blank" rel="noopener">Open Full View ↗</a>
       <div class="cert-modal-actions">
-        <span class="cert-counter" id="cert-counter">1 / 4</span>
-        <a class="btn primary" id="cert-open-raw" href="#" target="_blank" rel="noopener">Open Full Image ↗</a>
+        <span class="cert-counter" id="cert-counter">1 / 7</span>
       </div>
     </div>
   </div>

@@ -1,3 +1,34 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/montserrat-v31-latin-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/montserrat-v31-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/montserrat-v31-latin-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/montserrat-v31-latin-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('fonts/instrument-serif-italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
 /* =========================================================
 1. DESIGN TOKENS & MULTI-THEME COLOR PALETTES
    ========================================================= */
@@ -17,7 +48,7 @@
   --bg2-rgb: 22, 27, 34;
   --nav-h: 64px;
   --r: 12px;
-  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -162,7 +193,7 @@ ul { padding: 0; list-style: none; }
   background: var(--bg);
 }
 
-/* Pop-Up Color Theme Switcher (Single Clean Rule - Fixed!) */
+/* Pop-Up Color Theme Switcher */
 .theme-dropdown {
   position: relative;
   display: inline-block;
@@ -513,7 +544,6 @@ ul { padding: 0; list-style: none; }
 h2 { font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: -.01em; margin-bottom: 12px; }
 h3 { font-size: 1.05rem; margin-bottom: 8px; }
 .lead { color: var(--muted); margin-bottom: 28px; max-width: 70ch; }
-h2 + :not(.lead) { margin-top: 24px; }
 
 /* Base Card */
 .card {
@@ -599,7 +629,7 @@ h2 + :not(.lead) { margin-top: 24px; }
 }
 
 /* Vanta NET & Glassmorphism Overrides */
-.hero { position: relative; padding: 24px 0 36px; overflow: hidden; }
+.hero { position: relative; padding: 32px 0 42px; overflow: hidden; }
 #vanta-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--bg); transition: background 0.35s ease; }
 #vanta-bg canvas { width: 100% !important; height: 100% !important; display: block; }
 
@@ -632,11 +662,11 @@ html.vanta-on .modal-box { background: rgba(var(--bg2-rgb), .9); -webkit-backdro
 
 /* Staggered Hero Entrance Animation */
 .hero-copy > * { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s ease-out forwards; }
-.hero-copy .hello     { animation-delay: 0.1s; color: var(--muted); font-family: var(--mono); margin-bottom: 8px; }
-.hero-copy #hero-name { animation-delay: 0.2s; }
-.hero-copy .role      { animation-delay: 0.3s; }
-.hero-copy .bio       { animation-delay: 0.4s; }
-.hero-copy .actions   { animation-delay: 0.5s; }
+.hero-copy .hello          { animation-delay: 0.1s; color: var(--muted); font-family: var(--mono); margin-bottom: 8px; }
+.hero-copy #hero-name      { animation-delay: 0.2s; }
+.hero-copy .role           { animation-delay: 0.3s; }
+.hero-copy .hero-bio-card  { animation-delay: 0.4s; }
+.hero-copy .actions        { animation-delay: 0.5s; }
 
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
@@ -661,8 +691,6 @@ h1 {
 }
 
 .role { margin-top: 8px; font-size: 1.35rem; color: var(--accent-h); font-weight: 600; transition: color 0.35s ease; }
-.bio { margin-top: 10px; color: var(--muted); max-width: 60ch; font-size: 0.94rem; line-height: 1.52; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
 
 /* Profile Photo + Breathing Theme Aura + Floating Animation */
 .hero-photo {
@@ -789,7 +817,6 @@ h1 {
   box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.25);
 }
 
-/* Hero Social Icons: Brand Color on Hover */
 .hero-socials a[aria-label="WhatsApp"] svg { width: 20px; height: 20px; }
 .hero-socials a[aria-label="WhatsApp"]:hover { background: #25d366; border-color: #25d366; color: #ffffff; box-shadow: 0 6px 18px rgba(37, 211, 102, .45); }
 .hero-socials a[aria-label="LinkedIn"]:hover { background: #0a66c2; border-color: #0a66c2; color: #ffffff; box-shadow: 0 6px 18px rgba(10, 102, 194, .45); }
@@ -797,8 +824,7 @@ h1 {
 .hero-socials a[aria-label="Email"]:hover { background: #ea4335; border-color: #ea4335; color: #ffffff; box-shadow: 0 6px 18px rgba(234, 67, 53, .45); }
 
 /* About Cards */
-.about-details { position: relative; margin-top: 28px; }
-.about-details h2 { margin-bottom: 18px; }
+.about-details { position: relative; margin-top: 44px; }
 .about-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
 .about-main p + p { margin-top: 14px; }
 .about-main p { color: var(--muted); }
@@ -841,23 +867,7 @@ html.vanta-on .service-card.card {
 .service-card p { position: relative; color: var(--muted); font-size: .94rem; line-height: 1.65; }
 
 /* =========================================================
-8. PROJECTS SECTION CARDS
-   ========================================================= */
-.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.repo.card { display: flex; flex-direction: column; gap: 12px; text-decoration: none; }
-.repo h3 { margin: 0; color: var(--accent-h); overflow-wrap: anywhere; }
-.repo .desc { color: var(--muted); font-size: .92rem; flex: 1; overflow-wrap: anywhere; }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; font-size: .85rem; color: var(--muted); }
-.lang { display: inline-flex; align-items: center; gap: 6px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-.repo-links { display: flex; gap: 10px; flex-wrap: wrap; }
-.repo-links a { font-size: .85rem; font-weight: 600; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; background: var(--bg2); transition: border-color .2s; }
-.repo-links a:hover { border-color: var(--accent-h); }
-.fallback.card { grid-column: 1/-1; text-align: center; padding: 36px 22px; }
-.fallback p { color: var(--muted); margin: 8px 0 18px; }
-
-/* =========================================================
-9. CERTIFICATES SECTION CARDS & LIGHTBOX MODAL
+8. CERTIFICATES SECTION CARDS & LIGHTBOX MODAL
    ========================================================= */
 .certs-grid {
   display: grid;
@@ -1043,48 +1053,6 @@ html.vanta-on .cert-preview {
   transform: translateX(2px);
 }
 
-.cert-direct-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .2s;
-}
-
-.cert-direct-link:hover {
-  color: var(--text);
-}
-
-#cert-open-raw {
-  color: #ffffff;
-}
-
-.cert-direct-link.cert-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--accent-rgb), 0.5);
-  background: rgba(var(--accent-rgb), 0.14);
-  color: #ffffff;
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background .25s ease, border-color .25s ease, transform .25s ease;
-}
-
-.cert-direct-link.cert-download-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent-h);
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
 /* Certificate Lightbox Modal */
 .modal { position: fixed; inset: 0; z-index: 150; display: grid; place-items: center; padding: 20px; background: rgba(1, 4, 9, .75); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .modal[hidden] { display: none; }
@@ -1193,8 +1161,25 @@ html.modal-open { overflow: hidden; }
   color: var(--muted);
 }
 
+.cert-direct-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cert-direct-link:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
 /* =========================================================
-10. CONTACT SECTION CARDS (INFO CARD & FORM CARD)
+9. CONTACT SECTION CARDS (INFO CARD & FORM CARD)
    ========================================================= */
 .contact-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: start; }
 
@@ -1286,7 +1271,6 @@ html.modal-open { overflow: hidden; }
 .status { margin-top: 10px; font-size: .88rem; color: var(--accent-h); overflow-wrap: anywhere; }
 .status a { color: inherit; }
 
-/* Fix Browser Autofill White Background on Inputs */
 .form input:-webkit-autofill,
 .form input:-webkit-autofill:hover,
 .form input:-webkit-autofill:focus,
@@ -1299,7 +1283,7 @@ html.modal-open { overflow: hidden; }
 }
 
 /* =========================================================
-11. FOOTER & SCROLL REVEAL ANIMATION
+10. FOOTER & SCROLL REVEAL ANIMATION
    ========================================================= */
 .footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: .9rem; }
 .footer a { text-decoration: none; transition: color .2s, transform .2s, box-shadow .2s; }
@@ -1313,7 +1297,7 @@ html.modal-open { overflow: hidden; }
 .reveal.active { opacity: 1; transform: translateY(0); }
 
 /* =========================================================
-12. RESPONSIVE BREAKPOINTS, ACCESSIBILITY & CUSTOM CURSOR
+11. RESPONSIVE BREAKPOINTS, ACCESSIBILITY & CUSTOM CURSOR
    ========================================================= */
 @media (max-width: 900px) {
   .hero-grid {
@@ -1339,13 +1323,6 @@ html.modal-open { overflow: hidden; }
 
   .role {
     font-size: 1.15rem;
-  }
-
-  .bio {
-    max-width: 100%;
-    margin-inline: auto;
-    font-size: 0.92rem;
-    line-height: 1.55;
   }
 
   .actions {
@@ -1384,10 +1361,10 @@ html.modal-open { overflow: hidden; }
   .section { padding: 56px 0; }
   .skill-grid, .projects { grid-template-columns: 1fr; }
   .profile-tiles { grid-template-columns: repeat(2, 1fr); }
-  .btn { width: 100%; }
+  .actions .btn-pill-solid,
+  .actions .btn-pill-outline { width: 100%; }
 }
 
-/* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -1395,7 +1372,6 @@ html.modal-open { overflow: hidden; }
   .reveal, .hero-copy > * { opacity: 1 !important; transform: none !important; }
 }
 
-/* Custom Cursor (Dynamic Theme Variables) */
 html.has-cursor,
 html.has-cursor * { cursor: none !important; }
 html.has-cursor input,
@@ -1473,7 +1449,7 @@ html.has-cursor textarea { cursor: text !important; }
 }
 
 /* =========================================================
-13. SABOOR AI ASSISTANT (CLEAN & COMPACT UI)
+12. SABOOR AI ASSISTANT
    ========================================================= */
 .ai-chat-widget {
   --ai-accent: var(--accent-h, #2ea043);
@@ -1495,7 +1471,6 @@ body.intro-locked .ai-chat-widget {
   transform: translateY(20px);
 }
 
-/* Clean Borderless Compact Launcher Card */
 .ai-chat-toggle {
   display: inline-flex;
   align-items: center;
@@ -1576,7 +1551,6 @@ body.intro-locked .ai-chat-widget {
   80% { transform: rotate(8deg) scale(1.05); }
 }
 
-/* Backdrop Overlay */
 .ai-chat-backdrop {
   position: fixed;
   inset: 0;
@@ -1594,7 +1568,6 @@ body.intro-locked .ai-chat-widget {
   pointer-events: auto;
 }
 
-/* Glassmorphism Chat Window */
 .ai-chat-window {
   position: fixed;
   top: 50%;
@@ -1631,7 +1604,6 @@ body.intro-locked .ai-chat-widget {
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Header */
 .ai-chat-header {
   display: flex;
   align-items: center;
@@ -1664,9 +1636,7 @@ body.intro-locked .ai-chat-widget {
   flex-shrink: 0;
 }
 
-.ai-title-group {
-  min-width: 0;
-}
+.ai-title-group { min-width: 0; }
 
 .ai-title-group h4 {
   margin: 0 0 3px 0;
@@ -1725,7 +1695,6 @@ body.intro-locked .ai-chat-widget {
   color: #fff;
 }
 
-/* Messages Area */
 .ai-chat-messages {
   flex: 1;
   padding: 20px 24px;
@@ -1743,7 +1712,6 @@ body.intro-locked .ai-chat-widget {
   max-width: 86%;
 }
 
-/* WHITE AI ASSISTANT LABEL */
 .ai-sender-label {
   font-size: 11px;
   font-weight: 700;
@@ -1775,7 +1743,6 @@ body.intro-locked .ai-chat-widget {
   text-underline-offset: 3px;
 }
 
-/* User Message Right Bubble */
 .ai-msg.user {
   align-self: flex-end;
   max-width: 78%;
@@ -1791,7 +1758,6 @@ body.intro-locked .ai-chat-widget {
   word-wrap: break-word;
 }
 
-/* Scroll Down Floating Button */
 .ai-scroll-bottom {
   position: absolute;
   bottom: 118px;
@@ -1814,11 +1780,8 @@ body.intro-locked .ai-chat-widget {
   z-index: 5;
 }
 
-.ai-scroll-bottom.visible {
-  display: flex;
-}
+.ai-scroll-bottom.visible { display: flex; }
 
-/* Quick Chips (Vertical Stack) */
 .ai-suggestions {
   display: flex;
   flex-direction: column;
@@ -1830,9 +1793,7 @@ body.intro-locked .ai-chat-widget {
   scrollbar-width: none;
 }
 
-.ai-suggestions::-webkit-scrollbar {
-  display: none;
-}
+.ai-suggestions::-webkit-scrollbar { display: none; }
 
 .ai-chip {
   background: rgba(255, 255, 255, 0.08);
@@ -1859,7 +1820,6 @@ body.intro-locked .ai-chat-widget {
   transform: translateX(3px);
 }
 
-/* Bottom Input Area */
 .ai-chat-input-area {
   display: flex;
   align-items: center;
@@ -1915,20 +1875,14 @@ body.intro-locked .ai-chat-widget {
   transform: scale(1.05);
 }
 
-/* =========================================================
-14. MOBILE GLASSY & COMPACT AI CHATBOT
-   ========================================================= */
 @media (max-width: 768px) {
   .ai-chat-widget {
     bottom: 16px;
     right: 16px;
   }
 
-  .ai-toggle-text {
-    display: none !important;
-  }
+  .ai-toggle-text { display: none !important; }
 
-  /* Clean & Compact Circular Launcher Button on Mobile */
   .ai-chat-toggle {
     width: 52px;
     height: 52px;
@@ -1956,12 +1910,16 @@ body.intro-locked .ai-chat-widget {
     height: 24px;
   }
 
-  /* Prominent Frosted Glass Modal on Mobile */
   .ai-chat-window {
-    width: calc(100vw - 20px);
-    height: calc(100dvh - 32px);
-    max-height: calc(100dvh - 32px);
-    border-radius: 22px;
+    top: 10px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    transform: scale(0.96) !important;
+    border-radius: 20px;
     background: linear-gradient(
       160deg,
       rgba(var(--bg2-rgb), 0.58) 0%,
@@ -1976,39 +1934,32 @@ body.intro-locked .ai-chat-widget {
       inset 0 1px 0 rgba(255, 255, 255, 0.22);
   }
 
+  .ai-chat-window.open { transform: scale(1) !important; }
+
   .ai-chat-header {
-    padding: 13px 16px;
+    flex-shrink: 0;
+    padding: 12px 14px;
     background: rgba(255, 255, 255, 0.06);
   }
 
-  .ai-subtitle {
-    display: none;
-  }
+  .ai-subtitle { display: none; }
 
   .ai-chat-messages {
-    padding: 16px 14px;
+    min-height: 0;
+    padding: 14px;
     gap: 14px;
   }
 
-  .ai-msg-group.bot {
-    max-width: 92%;
+  .ai-msg-group.bot { max-width: 92%; }
+  .ai-msg.bot { font-size: 14px; }
+  .ai-msg.user { max-width: 85%; font-size: 14px; }
+
+  .ai-suggestions,
+  .ai-chat-input-area {
+    flex-shrink: 0;
   }
 
-  .ai-msg.bot {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.14);
-    font-size: 14px;
-  }
-
-  .ai-msg.user {
-    max-width: 85%;
-    font-size: 14px;
-  }
-
-  .ai-suggestions {
-    padding: 6px 14px 8px;
-  }
-
+  .ai-suggestions { padding: 6px 14px 8px; }
   .ai-chat-input-area {
     margin: 4px 12px 12px;
     padding: 5px 6px 5px 14px;
@@ -2016,9 +1967,6 @@ body.intro-locked .ai-chat-widget {
   }
 }
 
-/* =========================================================
-15. AI CHATBOT SPARKLE CURSOR (ONLY INSIDE CHATBOT)
-   ========================================================= */
 .cursor-sparkle {
   position: fixed;
   top: 0;
@@ -2043,16 +1991,12 @@ body.intro-locked .ai-chat-widget {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cursor-sparkle.show {
-  opacity: 1;
-}
-
+.cursor-sparkle.show { opacity: 1; }
 .cursor-sparkle.hover svg {
   transform: rotate(45deg) scale(1.3);
   color: #ffffff;
 }
 
-/* Chatbot ke andar default dot/ring hide aur sparkle show */
 html.in-ai-chat .cursor-dot,
 html.in-ai-chat .cursor-ring {
   opacity: 0 !important;
@@ -2063,17 +2007,12 @@ html.in-ai-chat .cursor-ring {
   cursor: none !important;
 }
 
-.ai-chat-window input {
-  cursor: text !important;
-}
+.ai-chat-window input { cursor: text !important; }
 
 @media (hover: none), (pointer: coarse) {
   .cursor-sparkle { display: none !important; }
 }
 
-/* =========================================================
-COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
-   ========================================================= */
 .ai-chat-window::before {
   content: "";
   position: absolute;
@@ -2090,21 +2029,11 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
 }
 
 @keyframes aiCombinedOrbs360 {
-  0% {
-    background-position: 0% 0%, 100% 100%, 0 0, 0 0;
-  }
-  25% {
-    background-position: 100% 0%, 0% 100%, 0 0, 0 0;
-  }
-  50% {
-    background-position: 100% 100%, 0% 0%, 0 0, 0 0;
-  }
-  75% {
-    background-position: 0% 100%, 100% 0%, 0 0, 0 0;
-  }
-  100% {
-    background-position: 0% 0%, 100% 100%, 0 0, 0 0;
-  }
+  0%   { background-position: 0% 0%, 100% 100%, 0 0, 0 0; }
+  25%  { background-position: 100% 0%, 0% 100%, 0 0, 0 0; }
+  50%  { background-position: 100% 100%, 0% 0%, 0 0, 0 0; }
+  75%  { background-position: 0% 100%, 100% 0%, 0 0, 0 0; }
+  100% { background-position: 0% 0%, 100% 100%, 0 0, 0 0; }
 }
 
 .ai-chat-window::after {
@@ -2119,14 +2048,14 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
   font-size: clamp(0.85rem, 3.8vw, 1.85rem);
   font-weight: 800;
   letter-spacing: 0.1em;
-  color: var(--accent-h);
+  color: #ffffff;
   opacity: 0.2;
   white-space: normal;
   pointer-events: none;
   z-index: 0;
   text-shadow:
-    0 0 18px rgba(var(--accent-rgb), 0.75),
-    0 0 36px rgba(var(--accent-rgb), 0.45);
+    0 0 18px rgba(255, 255, 255, 0.55),
+    0 0 36px rgba(255, 255, 255, 0.3);
 }
 
 .ai-chat-header,
@@ -2137,44 +2066,9 @@ COMBINED OPTION 2 + 3: 360° FAST ORBS + GRID + WATERMARK
   z-index: 1;
 }
 
-/* Mobile par Keyboard & Header Safe Layout */
-@media (max-width: 768px) {
-  .ai-chat-window {
-    top: 10px !important;
-    bottom: 10px !important;
-    left: 10px !important;
-    right: 10px !important;
-    width: auto !important;
-    height: auto !important;
-    max-height: none !important;
-    transform: scale(0.96) !important;
-    border-radius: 20px;
-  }
-
-  .ai-chat-window.open {
-    transform: scale(1) !important;
-  }
-
-  .ai-chat-header {
-    flex-shrink: 0;
-    padding: 12px 14px;
-  }
-
-  .ai-chat-messages {
-    min-height: 0;
-    padding: 14px;
-  }
-
-  .ai-suggestions,
-  .ai-chat-input-area {
-    flex-shrink: 0;
-  }
-}
 /* =========================================================
-   FLUID FULL-SCREEN RESPONSIVE LAYOUT (LAPTOP + MOBILE)
+   FLUID FULL-SCREEN RESPONSIVE LAYOUT & ROTATING AVATAR BORDER
    ========================================================= */
-
-/* 1. Navbar AUR Footer dono ko poori screen width par rakhne ke liye */
 header,
 nav,
 .navbar,
@@ -2188,21 +2082,6 @@ footer,
   padding-right: clamp(20px, 4vw, 64px) !important;
 }
 
-/* Footer text strictly left-aligned */
-footer .container,
-.footer .container,
-.footer-content {
-  max-width: 100% !important;
-  width: 100% !important;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start !important;
-  text-align: left !important;
-  gap: 12px;
-}
-
-/* 2. Saare sections screen ke mutabiq wide rahein (beech mein squeeze na hon) */
 section,
 .section,
 .container {
@@ -2214,69 +2093,48 @@ section,
   padding-right: clamp(20px, 4vw, 64px) !important;
 }
 
-/* 3. Intro / Front "Play Portfolio" overlay 100% full-screen rahe */
-#intro,
 #intro-overlay,
-#intro-screen,
-.intro-overlay,
-.intro-screen,
-.hero-intro {
+.intro-overlay {
   position: fixed !important;
   inset: 0 !important;
   width: 100vw !important;
-  height: 100vh !important;
   height: 100dvh !important;
   max-width: none !important;
   margin: 0 !important;
   padding: 24px !important;
 }
 
-/* 4. Cards ki height equal rahe (no uneven gaps) */
 .grid,
 .cards-grid,
-.projects-grid,
-.skills-grid,
+.projects,
+.skill-grid,
 .services-grid,
-.certificates-grid,
-.contact-grid,
-.contact-wrapper {
+.certs-grid,
+.contact-grid {
   align-items: stretch;
 }
 
-.card,
-.project-card,
-.skill-card,
-.service-card,
-.cert-card,
-.contact-info-card,
-.contact-form-card {
+.card {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* 5. Mobile par proper compact padding */
 @media (max-width: 768px) {
   header,
   nav,
-  .navbar,
-  .nav-container,
   section,
   .section,
-  .container,
   footer,
-  .footer,
-  .footer-bottom {
+  .footer {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 }
 
-/* 6. Footer Full-Bleed Edge-to-Edge & Left Edge Text Fix (PC + Mobile) */
 footer,
-.footer,
-.footer-bottom {
+.footer {
   width: 100vw !important;
   max-width: 100vw !important;
   margin-left: calc(50% - 50vw) !important;
@@ -2290,9 +2148,7 @@ footer,
 }
 
 footer > *,
-.footer > *,
-footer .container,
-.footer .container {
+.footer > * {
   max-width: 100% !important;
   width: 100% !important;
   margin-left: 0 !important;
@@ -2302,25 +2158,12 @@ footer .container,
   text-align: left !important;
 }
 
-footer p,
-.footer p,
-footer span,
-.footer span {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  text-align: left !important;
-}
-
-/* =========================================================
-   THEME-SYNCED ROTATING BORDER LINE (.intro-avatar-wrap)
-   ========================================================= */
-
 .intro-avatar-wrap {
   position: relative !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 4px !important; /* Border ki motai */
+  padding: 4px !important;
   border-radius: 24px !important;
   overflow: hidden !important;
   background: rgba(255, 255, 255, 0.08) !important;
@@ -2328,7 +2171,6 @@ footer span,
   z-index: 1 !important;
 }
 
-/* Ghoomti hui glowing line */
 .intro-avatar-wrap::before {
   content: "" !important;
   position: absolute !important;
@@ -2348,7 +2190,6 @@ footer span,
   z-index: -1 !important;
 }
 
-/* Andar wali image ka apna static border hata kar clean fit karein */
 .intro-avatar-wrap .intro-avatar,
 #intro-avatar {
   position: relative !important;
@@ -2358,54 +2199,625 @@ footer span,
   z-index: 2 !important;
 }
 
-/* 4 Themes ke mutabiq automatic color change */
 [data-theme="midnight"] .intro-avatar-wrap::before {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 230deg,
-    #38bdf8 300deg,
-    #bae6fd 345deg,
-    #38bdf8 360deg
-  ) !important;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 230deg, #38bdf8 300deg, #bae6fd 345deg, #38bdf8 360deg) !important;
 }
 [data-theme="midnight"] .intro-avatar-wrap {
   box-shadow: 0 0 28px rgba(56, 189, 248, 0.28) !important;
 }
 
 [data-theme="charcoal"] .intro-avatar-wrap::before {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 230deg,
-    #fb923c 300deg,
-    #fed7aa 345deg,
-    #fb923c 360deg
-  ) !important;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 230deg, #fb923c 300deg, #fed7aa 345deg, #fb923c 360deg) !important;
 }
 [data-theme="charcoal"] .intro-avatar-wrap {
   box-shadow: 0 0 28px rgba(251, 146, 60, 0.28) !important;
 }
 
 [data-theme="cherry"] .intro-avatar-wrap::before {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 230deg,
-    #ef4444 300deg,
-    #fecaca 345deg,
-    #ef4444 360deg
-  ) !important;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 230deg, #ef4444 300deg, #fecaca 345deg, #ef4444 360deg) !important;
 }
 [data-theme="cherry"] .intro-avatar-wrap {
   box-shadow: 0 0 28px rgba(239, 68, 68, 0.28) !important;
 }
 
 @keyframes rotateAvatarBorder {
-  0% {
-    transform: rotate(0deg);
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   UPGRADE: SCROLL PROGRESS LINE + EDITORIAL HEADERS + PILLS + REPO CARDS
+   ========================================================= */
+.scroll-progress-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 105;
+}
+
+.scroll-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-h), #ffffff);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.85), 0 0 24px rgba(var(--accent-rgb), 0.45);
+  border-radius: 0 999px 999px 0;
+  transition: width 0.08s linear;
+}
+
+.section-header-editorial {
+  margin-bottom: 32px;
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-h);
+  margin-bottom: 10px;
+}
+
+.section-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--accent-h);
+  border-radius: 999px;
+}
+
+.editorial-title {
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.serif-italic {
+  font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.14em;
+  color: var(--accent-h);
+  letter-spacing: 0.01em;
+}
+
+.section-header-editorial .lead {
+  margin-bottom: 0;
+  max-width: 64ch;
+}
+
+.hero-bio-card {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--accent-h);
+  border-radius: 0 14px 14px 0;
+  background: rgba(255, 255, 255, 0.035);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  max-width: 62ch;
+}
+
+.hero-quote {
+  margin: 0 0 12px;
+  font-size: clamp(1.08rem, 1.8vw, 1.32rem);
+  font-weight: 600;
+  line-height: 1.38;
+  color: var(--text);
+}
+
+.bio-para {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+.bio-para + .bio-para {
+  margin-top: 10px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.btn-pill-solid,
+.btn-pill-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 999px !important;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), background 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+}
+
+.btn-pill-solid {
+  background: var(--accent) !important;
+  border: 1px solid var(--accent-h) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(var(--accent-dark-rgb), 0.42);
+}
+
+.btn-pill-solid:hover {
+  background: var(--accent-h) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(var(--accent-rgb), 0.55);
+}
+
+.btn-pill-outline {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: var(--text) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.btn-pill-outline:hover {
+  background: rgba(var(--accent-rgb), 0.14) !important;
+  border-color: var(--accent-h) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.btn-arrow,
+.btn-arrow-down {
+  display: inline-block;
+  transition: transform 0.22s ease;
+}
+
+.btn-pill-solid:hover .btn-arrow { transform: translateX(4px); }
+.btn-pill-outline:hover .btn-arrow-down { transform: translateY(3px); }
+
+.action-icon-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-circle-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--text);
+  text-decoration: none;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease, color 0.24s ease;
+}
+
+.action-circle-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-h);
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent-h);
+}
+
+@media (max-width: 900px) {
+  .hero-bio-card {
+    text-align: left;
+    margin-inline: auto;
   }
-  100% {
-    transform: rotate(360deg);
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 20px;
+}
+
+.repo.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.repo-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.repo-folder-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-dark-rgb), 0.18);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  color: var(--accent-h);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.repo.card:hover .repo-folder-ico {
+  transform: scale(1.06);
+  background: rgba(var(--accent-dark-rgb), 0.3);
+}
+
+.repo-index-pill {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.repo h3 {
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease;
+}
+
+.repo.card:hover h3 {
+  color: var(--accent-h);
+}
+
+.repo .desc { color: var(--muted); font-size: 0.94rem; line-height: 1.65; flex: 1; overflow-wrap: anywhere; transition: color 0.25s ease; }
+.repo.card:hover .desc { color: #ffffff; }
+
+.repo .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.lang { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+
+.repo-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.repo-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 15px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: 999px;
+  text-decoration: none;
+  background: rgba(var(--accent-dark-rgb), 0.14);
+  color: var(--text);
+  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
+}
+
+.repo-links a:hover {
+  background: var(--accent);
+  border-color: var(--accent-h);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.repo-links a.repo-demo-btn {
+  background: var(--accent);
+  border-color: var(--accent-h);
+  color: #ffffff;
+}
+
+.repo-links a.repo-demo-btn:hover {
+  background: var(--accent-h);
+}
+
+.fallback.card { grid-column: 1/-1; text-align: center; padding: 36px 22px; }
+.fallback p { color: var(--muted); margin: 8px 0 18px; }
+
+/* =========================================================
+   BALANCED HERO LAYOUT & MONTSERRAT FONT
+   ========================================================= */
+:root {
+  --font: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+body, button, input, textarea, select {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+.intro-title,
+#hero-name {
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.serif-italic {
+  font-family: "Instrument Serif", serif !important;
+  font-style: italic !important;
+}
+
+/* Gol icons ko chhupane ke liye */
+.action-icon-group {
+  display: none !important;
+}
+
+/* Hero Section ka Perfect Vertical Balance */
+.hero {
+  padding-top: 28px !important;
+  padding-bottom: 52px !important;
+}
+
+.hero-grid {
+  align-items: center !important;
+  gap: 40px !important;
+}
+
+.hero-copy .hello {
+  margin-bottom: 6px !important;
+  font-size: 1.05rem !important;
+}
+
+.role { margin-top: 8px; font-size: 1.35rem; color: #ffffff; font-weight: 600; transition: color 0.35s ease; }
+
+/* Bio Card ko saaf aur khula rakhne ke liye */
+.hero-bio-card {
+  margin-top: 16px !important;
+  padding: 16px 20px !important;
+  max-width: 640px !important;
+}
+
+.hero-quote {
+  margin-bottom: 10px !important;
+  font-size: 1.12rem !important;
+  line-height: 1.4 !important;
+}
+
+.bio-para {
+  font-size: 0.92rem !important;
+  line-height: 1.58 !important;
+}
+
+.bio-para + .bio-para {
+  margin-top: 8px !important;
+}
+
+/* Teeno Buttons ka Khula Aur Balanced Gap */
+.actions {
+  margin-top: 20px !important;
+  gap: 14px !important;
+}
+
+.btn-pill-solid,
+.btn-pill-outline {
+  padding: 11px 22px !important;
+  font-size: 0.9rem !important;
+}
+
+/* Neeche wale About Section ko screen se thora neeche rakhne ke liye */
+.about-details {
+  margin-top: 64px !important;
+}
+
+/* =========================================================
+   SECTION KICKER (01 — ABOUT ME, 02 — SKILLS, etc.) BARA & WHITE
+   ========================================================= */
+.section-kicker {
+  font-size: 1.05rem !important; /* Pehle 0.8rem tha, ab bara ho jayega */
+  font-weight: 800 !important;
+  color: #ffffff !important;     /* Pure white text */
+  letter-spacing: 0.16em !important;
+  margin-bottom: 12px !important;
+}
+
+.section-kicker::before {
+  width: 32px !important;
+  height: 3px !important;
+  background: #ffffff !important;
+}
+
+/* =========================================================
+   DOWNLOAD RESUME & SERVICES BUTTONS KA DYNAMIC THEME BORDER
+   ========================================================= */
+.btn-pill-outline {
+  border: 1.5px solid var(--accent-h) !important;
+  background: rgba(var(--accent-rgb), 0.1) !important;
+  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.18) !important;
+}
+
+.btn-pill-outline:hover {
+  background: var(--accent) !important;
+  border-color: var(--accent-h) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(var(--accent-rgb), 0.45) !important;
+}
+
+.cert-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* Open Full View button (Green background + White text) */
+.cert-modal-foot .cert-direct-link,
+a#cert-open-raw.cert-direct-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid #2ea043;
+  background: #238636;
+  color: #ffffff !important;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.cert-modal-foot .cert-direct-link:hover,
+a#cert-open-raw.cert-direct-link:hover {
+  background: #2ea043;
+  border-color: #3fb950;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* Inspect Certificate button (Border) */
+.cert-inspect-btn {
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 10px;
+  padding: 9px 14px;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.cert-inspect-btn:hover {
+  border-color: var(--accent-h) !important;
+  background: rgba(var(--accent-rgb), 0.12);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.14);
+}
+/* =========================================================
+   AI ASSISTANT LAUNCHER UPGRADE (desktop)
+   Theme-coloured border + glow, online dot, arrow on hover
+   ========================================================= */
+@media (min-width: 769px) {
+  .ai-chat-toggle {
+    padding: 8px 16px 8px 8px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.16), rgba(12, 14, 18, 0.9) 58%);
+    border: 1px solid rgba(var(--accent-rgb), 0.38);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 22px rgba(var(--accent-rgb), 0.18);
   }
+
+  .ai-chat-toggle:hover {
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.26), rgba(16, 19, 25, 0.95) 58%);
+    border-color: var(--accent-h);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.7), 0 0 30px rgba(var(--accent-rgb), 0.38);
+  }
+
+  .ai-toggle-icon {
+    position: relative;
+    border-radius: 11px;
+    box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.55);
+  }
+
+  /* green "online" dot */
+  .ai-toggle-icon::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #0c0e12;
+    animation: aiDotPulse 2s ease-out infinite;
+  }
+
+  .ai-toggle-sub {
+    color: #aab2bd;
+  }
+}
+
+@keyframes aiDotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-toggle-icon::after { animation: none; }
+}
+
+/* =========================================================
+   HERO AVATAR: theme-coloured line keeps travelling around the
+   photo, and stops (stays still) while hovering
+   ========================================================= */
+.avatar-ring {
+  position: relative;
+  border-radius: 50%;
+  line-height: 0;
+  animation: floatAvatar 4.5s ease-in-out infinite; /* ring + photo float together */
+}
+
+.avatar {
+  display: block;
+  animation: none;
+}
+
+.avatar:hover {
+  transform: none;
+}
+
+.avatar-ring::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 200deg,
+    var(--accent-h) 300deg,
+    color-mix(in srgb, var(--accent-h) 35%, #ffffff) 350deg,
+    var(--accent-h) 360deg
+  );
+  /* cut the middle out so only a thin ring line remains */
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  opacity: 1;
+  animation: avatarRingSpin 1.6s linear infinite;
+  animation-play-state: running;
+  pointer-events: none;
+}
+
+/* hover karne par line ruk jati ha (still) */
+.avatar-ring:hover::before {
+  animation-play-state: paused;
+}
+
+@keyframes avatarRingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-ring::before { animation: none; }
 }

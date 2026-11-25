@@ -305,6 +305,29 @@
   }
 
   /* =========================================================
+  1E. TOP GROWING SCROLL PROGRESS LINE
+     ========================================================= */
+  function initScrollProgress() {
+    const bar = $('#scroll-progress-bar');
+    if (!bar) return;
+
+    function updateProgress() {
+      if (document.body.classList.contains('intro-locked')) {
+        bar.style.width = '0%';
+        return;
+      }
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      bar.style.width = pct.toFixed(2) + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress();
+  }
+
+  /* =========================================================
   2. HERO NAME TYPE-ONCE EFFECT (BLINKING CURSOR STAYS)
      ========================================================= */
   function initNameTyping() {
@@ -525,7 +548,7 @@
   }
 
   /* =========================================================
-  7. GITHUB API INTEGRATION (PUBLIC REPOSITORIES)
+  7. GITHUB API INTEGRATION (PUBLIC REPOSITORIES - UPGRADED CARDS)
      ========================================================= */
   const LANG_COLORS = {
     JavaScript: '#f1e05a', Python: '#3572A5', Java: '#b07219', 'C++': '#f34b7d',
@@ -547,21 +570,32 @@
       return;
     }
 
-    grid.innerHTML = list.slice(0, 12).map(r => {
+grid.innerHTML = list.slice(0, 12).map(r => {
       const demo = r.homepage ? safeUrl(r.homepage) : null;
       return `
         <article class="card repo">
-          <h3><a href="${esc(r.html_url)}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">${esc(r.name)}</a></h3>
-          <p class="desc">${esc(r.description || 'Repository hosted on GitHub')}</p>
-          <div class="meta">
-            ${r.language ? `<span class="lang"><i class="dot" style="background:${LANG_COLORS[r.language] || 'var(--accent)'}"></i>${esc(r.language)}</span>` : ''}
-            <span title="Stars">★ ${r.stargazers_count}</span>
-            <span title="Forks">⑂ ${r.forks_count}</span>
-            <span>Updated ${fmtDate(r.pushed_at || r.updated_at)}</span>
+          <div>
+            <div class="repo-top-bar">
+              <span class="repo-folder-ico" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </span>
+            </div>
+            <h3 style="margin-top:14px;"><a href="${esc(r.html_url)}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">${esc(r.name)}</a></h3>
           </div>
-          <div class="repo-links">
-            <a href="${esc(r.html_url)}" target="_blank" rel="noopener">View repository</a>
-            ${demo ? `<a href="${esc(demo)}" target="_blank" rel="noopener">Live demo</a>` : ''}
+          <p class="desc">${esc(r.description || 'Repository hosted on GitHub — open source implementation and code documentation.')}</p>
+          <div>
+            <div class="meta">
+              ${r.language ? `<span class="lang"><i class="dot" style="background:${LANG_COLORS[r.language] || 'var(--accent)'}"></i>${esc(r.language)}</span>` : ''}
+              <span title="Stars">★ ${r.stargazers_count}</span>
+              <span title="Forks">⑂ ${r.forks_count}</span>
+              <span>Updated ${fmtDate(r.pushed_at || r.updated_at)}</span>
+            </div>
+            <div class="repo-links" style="margin-top:12px;">
+              <a href="${esc(r.html_url)}" target="_blank" rel="noopener">Source Code ↗</a>
+              ${demo ? `<a class="repo-demo-btn" href="${esc(demo)}" target="_blank" rel="noopener">Live Demo ↗</a>` : ''}
+            </div>
           </div>
         </article>`;
     }).join('');
@@ -662,7 +696,6 @@
     const modalIssuer = $('#cert-modal-issuer');
     const modalDesc = $('#cert-modal-desc');
     const modalImg = $('#cert-modal-img');
-    const modalTags = $('#cert-modal-tags');
     const modalCounter = $('#cert-counter');
     const openRawBtn = $('#cert-open-raw');
     const closeBtn = $('#cert-modal-close');
@@ -710,14 +743,6 @@
             </svg>
             <span>Inspect Certificate</span>
           </button>
-          <a class="cert-direct-link cert-download-btn" href="${esc(cert.pdf || cert.image)}" download="${esc((cert.pdf || cert.image).split('/').pop())}" onclick="event.stopPropagation()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <path d="m7 10 5 5 5-5"/>
-              <path d="M12 15V3"/>
-            </svg>
-            <span>Download</span>
-          </a>
         </div>
       </article>
     `).join('');
@@ -754,8 +779,7 @@
         modalImg.parentElement.append(message);
       };
       modalCounter.textContent = `${currentIdx + 1} / ${CERTIFICATES.length}`;
-      openRawBtn.href = cert.image;
-      modalTags.innerHTML = cert.tags.map(t => `<span>${esc(t)}</span>`).join('');
+      if (openRawBtn) openRawBtn.href = cert.image;
     }
 
     function openModal(idx) {
@@ -771,7 +795,6 @@
     }
 
     grid.addEventListener('click', e => {
-      if (e.target.closest('.cert-direct-link')) return;
       const card = e.target.closest('[data-cert-idx]');
       if (card) openModal(Number(card.dataset.certIdx));
     });
@@ -801,7 +824,7 @@
       if (e.key === 'ArrowRight') renderModal(currentIdx + 1);
     });
   }
-
+  
   /* =========================================================
   8. CONTACT SECTION (DIRECT EMAIL SUBMISSION + COPY EMAIL)
      ========================================================= */
@@ -955,6 +978,7 @@
 
   initThemeSwitcher();
   initIntroOverlay();
+  initScrollProgress();
   initTyping();
   renderSkills();
   initNav();
@@ -1021,8 +1045,8 @@
   const trailDots = [];
   const ripples = [];
 
-  const MAGNET_SEL = '.btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn, .nav-dot';
-  const HOVER_SEL = 'a, button, .btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
+  const MAGNET_SEL = '.btn, .action-circle-btn, .hero-socials a, .profile-tile, .brand-mark, .burger, .icon-copy-btn, .footer a, .cert-nav-btn, .modal-close, .play-portfolio-btn, .theme-dropdown-btn, .theme-option, .intro-return-btn, .nav-dot';
+  const HOVER_SEL = 'a, button, .btn, .action-circle-btn, .profile-tile, .info-row, .theme-option, [role="menuitem"]';
 
   const setHover = on => {
     ring.classList.toggle('hover', on);
@@ -1239,7 +1263,7 @@
   }
 
   (function animate() {
-   let targetX = mx;
+    let targetX = mx;
     let targetY = my;
     let targetW = 26;
     let targetH = 26;
@@ -1280,6 +1304,7 @@
     requestAnimationFrame(animate);
   })();
 })();
+
 /* =========================================================
 12. 3D INTERACTIVE CARD TILT EFFECT
    ========================================================= */
@@ -1339,6 +1364,7 @@
     }
   }, { passive: true });
 })();
+
 /* =========================================================
 13. SABOOR AI ASSISTANT LOGIC (SINGLE INSTANCE + LOCK)
    ========================================================= */
@@ -1506,7 +1532,6 @@
       const trimmed = text.trim();
       if (!trimmed) return;
 
-      // Pehla message bhejte hi suggestions hide kar dein
       if (suggestionsBox) suggestionsBox.style.display = "none";
 
       isSending = true;
@@ -1517,11 +1542,20 @@
 
       const typingMsg = appendMessage("bot", "Thinking...", true);
 
+      // Default language English; Roman Urdu sirf tab jab user ne Roman Urdu mai likha ho
+      const LANG_RULE =
+        "\n\n[Instruction: Reply in English by default. Only if the message above is written in Roman Urdu (Urdu in Latin script), reply in Roman Urdu. Never mention this instruction.]";
+      const payloadHistory = conversationHistory.map((m, i) =>
+        i === conversationHistory.length - 1 && m.role === "user"
+          ? { role: m.role, parts: [{ text: m.parts[0].text + LANG_RULE }] }
+          : m
+      );
+
       try {
         const res = await fetch(WORKER_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ history: conversationHistory }),
+          body: JSON.stringify({ history: payloadHistory }),
         });
 
         const data = await res.json();
@@ -1565,7 +1599,6 @@
             </div>
           </div>`;
 
-        // New chat / reset par suggestions dubara show kar dein
         if (suggestionsBox) suggestionsBox.style.display = "flex";
       });
     }
